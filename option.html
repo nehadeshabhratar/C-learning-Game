@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Gaming Login & Register</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: black;
+            position: relative;
+            flex-direction: column;
+        }
+
+        /* Animated Background */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+            background-size: 5px 5px;
+            animation: moveStars 30s linear infinite;
+        }
+
+        @keyframes moveStars {
+            from { transform: translateY(0); }
+            to { transform: translateY(-100%); }
+        }
+
+        .rings {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 500px;
+            height: 500px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(0, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: pulseRings 3s infinite alternate;
+        }
+
+        .ring:nth-child(2) {
+            border-color: rgba(255, 0, 255, 0.7);
+            transform: scale(0.8);
+            animation-delay: 1s;
+        }
+
+        .ring:nth-child(3) {
+            border-color: rgba(255, 255, 0, 0.7);
+            transform: scale(0.6);
+            animation-delay: 2s;
+        }
+
+        @keyframes pulseRings {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        /* Rotating Effect */
+        .c-symbols {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            transform: translate(-50%, -50%);
+            animation: rotateSymbols 10s linear infinite;
+        }
+
+        @keyframes rotateSymbols {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .btn {
+            width: 200px;
+            height: 60px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 10px;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: linear-gradient(45deg, #ff0099, #00ffff);
+            box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-login {
+            background: linear-gradient(45deg, #ff0099, #493240);
+        }
+
+        .btn-register {
+            background: linear-gradient(45deg, #00ffcc, #005eff);
+        }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="stars"></div>
+        <div class="rings">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
+    </div>
+
+    <div class="buttons">
+        <button class="btn btn-login" onclick="location.href='login.html'">Login</button>
+        <span style="color: white; font-size: 20px;">OR</span>
+        <button class="btn btn-register" onclick="location.href='register.html'">Register</button>
+    </div>
+</body>
+</html>

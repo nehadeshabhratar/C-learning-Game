@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editable 3D Animated Login Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e1e2f, #23234e);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .login-container {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            from {
+                transform: rotateX(10deg) translateY(-10px);
+            }
+            to {
+                transform: rotateX(-10deg) translateY(10px);
+            }
+        }
+
+        .login-box {
+            width: 350px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            transform: rotateY(10deg);
+            transition: 0.3s;
+        }
+
+        .login-box:hover {
+            transform: rotateY(0deg) scale(1.05);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .input-box {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #00ffff;
+            outline: none;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background: #00ffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: black;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .login-btn:hover {
+            background: #0099cc;
+            box-shadow: 0 0 25px #00ffff;
+        }
+
+        .register-text {
+            margin-top: 10px;
+            color: #aaa;
+        }
+
+        .register-text a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .register-text a:hover {
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .editable {
+            border: 1px dashed #00ffff;
+            padding: 5px;
+            display: inline-block;
+            min-width: 50px;
+            cursor: text;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h2 contenteditable="true">Login</h2>
+            <form action="start.html">
+                <div class="input-box">
+                    <input type="text" placeholder="Username">
+                </div>
+                <div class="input-box">
+                    <input type="password" placeholder="Password">
+                </div>
+                <button type="submit" class="login-btn editable" contenteditable="true">Login</button>
+                <p class="register-text">Don't have an account? <a href='register.html'>Register</a></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

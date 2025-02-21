@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<input type="file" name="uploadfile" id="uploadfile">
+<label for ="uploadfile"></label>
+
+<img id="image"></img>
+<script type="text/javascript">
+	var uploaded=document.getElementById("uploadfile");
+	var image=document.getElementById("image");
+
+	uploaded.addEventListener("change",function(e)
+	{
+		image.src=URL.createObjectURL(e.target.files[0])
+	});
+</script>
+</body>
+</html>

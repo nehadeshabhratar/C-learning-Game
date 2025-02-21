@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 3 - C Syntax Challenge</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            color: white;
+            padding: 50px;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            display: inline-block;
+            width: 60%;
+            transform: rotateY(0deg);
+            transition: transform 0.5s ease-in-out, box-shadow 0.5s;
+            position: relative;
+        }
+
+        .level {
+            font-size: 28px;
+            font-weight: bold;
+            color: gold;
+            text-shadow: 0px 0px 15px gold;
+            margin-bottom: 10px;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0px 0px 10px gold; }
+            100% { text-shadow: 0px 0px 20px gold; }
+        }
+
+        h2 {
+            font-size: 24px;
+            color: cyan;
+            text-shadow: 0px 0px 10px cyan;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0px 0px 20px cyan;
+            transition: transform 0.3s;
+        }
+
+        pre:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 0px 30px cyan;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            resize: none;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: 0px 0px 15px cyan;
+            transform: scale(1.02);
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(255, 0, 255, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            transform: scale(1.1);
+            box-shadow: 0px 5px 30px rgba(0, 255, 255, 0.8);
+        }
+
+        button:active {
+            transform: scale(0.9);
+            box-shadow: 0px 2px 10px rgba(255, 0, 255, 0.5);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 30px cyan;
+            text-align: center;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Applause Sound -->
+    <audio id="applauseSound" src="C:\Users\Hp\OneDrive\Desktop\game\applause.mp3" loop preload="auto"></audio>
+
+    <div class="container">
+        <div class="level">🔥 Level 3 - C Syntax Challenge 🔥</div>
+        <h2>Write the Correct C Code</h2>
+        <pre id="query-box"></pre>
+        <textarea id="user-answer" placeholder="Type your answer here..."></textarea>
+        <button onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="popup">
+        <h2>✅ Level Successfully Completed!</h2>
+        <button onclick="goToNext()">Proceed</button>
+    </div>
+
+    <script>
+        const queries = [
+            {
+                question: "Write a basic C program that prints 'Hello, World!'",
+                correct: '#include <stdio.h>\nint main()\n{\n    printf("Hello, World!");\n    return 0;\n}'
+            },
+            {
+                question: "Declare an integer variable named 'num' and assign it the value 100.",
+                correct: 'int num = 100;'
+            },
+            {
+                question: "Write a 'while loop' that prints numbers from 1 to 5.",
+                correct: 'int i = 1;\nwhile(i <= 5) {\n    printf("%d ", i);\n    i++;\n}'
+            }
+        ];
+
+        function getRandomQuery() {
+            return queries[Math.floor(Math.random() * queries.length)];
+        }
+
+        let currentQuery = getRandomQuery();
+        document.getElementById("query-box").innerText = currentQuery.question;
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById("user-answer").value.trim().replace(/\s+/g, '');
+            const correctAnswer = currentQuery.correct.trim().replace(/\s+/g, '');
+
+            if (userAnswer === correctAnswer) {
+                let applauseSound = document.getElementById("applauseSound");
+
+                // Play applause sound in loop
+                applauseSound.currentTime = 0;
+                applauseSound.play().catch(error => console.error("Audio playback error: ", error));
+
+                document.getElementById("successPopup").style.display = "block";
+            } else {
+                alert("Incorrect! Try Again or Review the Concepts.");
+            }
+        }
+
+        function goToNext() {
+            // Stop the applause sound when the user clicks Proceed
+            let applauseSound = document.getElementById("applauseSound");
+            applauseSound.pause();
+            applauseSound.currentTime = 0;
+
+            window.location.href = 'feed.html';
+        }
+    </script>
+</body>
+</html>
