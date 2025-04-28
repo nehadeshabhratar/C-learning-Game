@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+  const pseudocodes = [
+    { 
+        "question": "Write a C program to perform arithmetic operations on two numbers using functions.", 
+        "correct": "#include <stdio.h>\nfloat add(float a, float b) { return a + b; }\nfloat subtract(float a, float b) { return a - b; }\nfloat multiply(float a, float b) { return a * b; }\nfloat divide(float a, float b) { return (b != 0) ? a / b : 0; }\nint main() {\n    float num1, num2;\n    printf(\"Enter two numbers: \");\n    scanf(\"%f %f\", &num1, &num2);\n    printf(\"Sum: %.2f\\n\", add(num1, num2));\n    printf(\"Difference: %.2f\\n\", subtract(num1, num2));\n    printf(\"Product: %.2f\\n\", multiply(num1, num2));\n    printf(\"Quotient: %.2f\\n\", divide(num1, num2));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find whether a given number is even or odd using the bitwise AND operator.", 
+        "correct": "#include <stdio.h>\nint isEven(int num) {\n    return (num & 1) == 0;\n}\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    if (isEven(num))\n        printf(\"%d is even\\n\", num);\n    else\n        printf(\"%d is odd\\n\", num);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to swap two numbers without using a third variable using bitwise XOR.", 
+        "correct": "#include <stdio.h>\nvoid swap(int *a, int *b) {\n    *a = *a ^ *b;\n    *b = *a ^ *b;\n    *a = *a ^ *b;\n}\nint main() {\n    int x, y;\n    printf(\"Enter two numbers: \");\n    scanf(\"%d %d\", &x, &y);\n    printf(\"Before swap: x = %d, y = %d\\n\", x, y);\n    swap(&x, &y);\n    printf(\"After swap: x = %d, y = %d\\n\", x, y);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to check whether a number is positive, negative, or zero using ternary operator.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    (num > 0) ? printf(\"Positive\\n\") : (num < 0) ? printf(\"Negative\\n\") : printf(\"Zero\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the maximum of three numbers using conditional (ternary) operator.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int a, b, c, max;\n    printf(\"Enter three numbers: \");\n    scanf(\"%d %d %d\", &a, &b, &c);\n    max = (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);\n    printf(\"Maximum: %d\\n\", max);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to demonstrate the use of increment and decrement operators.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int x = 5;\n    printf(\"Original: %d\\n\", x);\n    printf(\"Post-increment: %d\\n\", x++);\n    printf(\"After post-increment: %d\\n\", x);\n    printf(\"Pre-increment: %d\\n\", ++x);\n    printf(\"Post-decrement: %d\\n\", x--);\n    printf(\"After post-decrement: %d\\n\", x);\n    printf(\"Pre-decrement: %d\\n\", --x);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the size of different data types using sizeof operator.", 
+        "correct": "#include <stdio.h>\nint main() {\n    printf(\"Size of int: %lu bytes\\n\", sizeof(int));\n    printf(\"Size of float: %lu bytes\\n\", sizeof(float));\n    printf(\"Size of double: %lu bytes\\n\", sizeof(double));\n    printf(\"Size of char: %lu bytes\\n\", sizeof(char));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to check if a number is power of 2 using bitwise AND operator.", 
+        "correct": "#include <stdio.h>\nint isPowerOfTwo(int num) {\n    return (num > 0) && ((num & (num - 1)) == 0);\n}\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    if (isPowerOfTwo(num))\n        printf(\"%d is a power of 2\\n\", num);\n    else\n        printf(\"%d is not a power of 2\\n\", num);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the quotient and remainder using division and modulus operators.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int dividend, divisor, quotient, remainder;\n    printf(\"Enter dividend and divisor: \");\n    scanf(\"%d %d\", &dividend, &divisor);\n    quotient = dividend / divisor;\n    remainder = dividend % divisor;\n    printf(\"Quotient: %d, Remainder: %d\\n\", quotient, remainder);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to check if a year is a leap year using logical operators.", 
+        "correct": "#include <stdio.h>\nint isLeapYear(int year) {\n    return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);\n}\nint main() {\n    int year;\n    printf(\"Enter a year: \");\n    scanf(\"%d\", &year);\n    if (isLeapYear(year))\n        printf(\"%d is a leap year\\n\", year);\n    else\n        printf(\"%d is not a leap year\\n\", year);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to implement a simple calculator using switch-case and arithmetic operators.", 
+        "correct": "#include <stdio.h>\nint main() {\n    char op;\n    float num1, num2;\n    printf(\"Enter operator (+, -, *, /): \");\n    scanf(\" %c\", &op);\n    printf(\"Enter two numbers: \");\n    scanf(\"%f %f\", &num1, &num2);\n    switch (op) {\n        case '+': printf(\"Result: %.2f\\n\", num1 + num2); break;\n        case '-': printf(\"Result: %.2f\\n\", num1 - num2); break;\n        case '*': printf(\"Result: %.2f\\n\", num1 * num2); break;\n        case '/': if (num2 != 0) printf(\"Result: %.2f\\n\", num1 / num2); else printf(\"Division by zero error\\n\"); break;\n        default: printf(\"Invalid operator\\n\");\n    }\n    return 0;\n}" 
+    }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+                        submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "start.html";
+            }
+        }
+    };
+});
+
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
+
+
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 3, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+    </script>
+</body>
+</html>  

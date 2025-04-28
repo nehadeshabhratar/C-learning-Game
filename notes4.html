@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Statements in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>🔹 Control Statements in C</h1>
+
+<div class="container">
+    <h2>📌 What are Control Statements?</h2>
+    <p>Control statements in C determine the flow of execution in a program. They help in decision-making, looping, and jumping to different parts of the program.</p>
+
+    <h2>🔹 Types of Control Statements</h2>
+
+    <h3>📌 1. Conditional Statements (Decision-Making)</h3>
+    <p>Used to execute a block of code based on a condition.</p>
+
+    <h4>👉 if Statement</h4>
+    <p>Executes a block of code only if the condition is true.</p>
+    <pre>
+if (condition) {
+    // Code to execute if condition is true
+}
+    </pre>
+
+    <h4>👉 if-else Statement</h4>
+    <p>Executes one block if the condition is true, otherwise executes another block.</p>
+    <pre>
+if (condition) {
+    // Code if condition is true
+} else {
+    // Code if condition is false
+}
+    </pre>
+
+    <h4>👉 else-if Ladder</h4>
+    <p>Used when there are multiple conditions to check.</p>
+    <pre>
+if (condition1) {
+    // Code if condition1 is true
+} else if (condition2) {
+    // Code if condition2 is true
+} else {
+    // Code if no conditions are true
+}
+    </pre>
+
+    <h4>👉 switch Statement</h4>
+    <p>Used to execute one case from multiple options.</p>
+    <pre>
+switch(expression) {
+    case value1:
+        // Code for case 1
+        break;
+    case value2:
+        // Code for case 2
+        break;
+    default:
+        // Code if no case matches
+}
+    </pre>
+
+    <h2>🔹 2. Looping Statements</h2>
+    <p>Loops execute a block of code multiple times based on a condition.</p>
+
+    <h4>👉 for Loop</h4>
+    <p>Used when the number of iterations is known.</p>
+    <pre>
+for (initialization; condition; increment/decrement) {
+    // Code to execute
+}
+    </pre>
+
+    <h4>👉 while Loop</h4>
+    <p>Executes as long as the condition is true.</p>
+    <pre>
+while (condition) {
+    // Code to execute
+}
+    </pre>
+
+    <h4>👉 do-while Loop</h4>
+    <p>Executes at least once, then continues based on condition.</p>
+    <pre>
+do {
+    // Code to execute
+} while (condition);
+    </pre>
+
+    <h2>🔹 3. Jump Statements</h2>
+    <p>Jump statements transfer control to another part of the program.</p>
+
+    <h4>👉 break Statement</h4>
+    <p>Exits the loop or switch statement.</p>
+    <pre>
+for (int i = 1; i <= 10; i++) {
+    if (i == 5) {
+        break;  // Stops when i == 5
+    }
+    printf("%d ", i);
+}
+    </pre>
+
+    <h4>👉 continue Statement</h4>
+    <p>Skips the current iteration and moves to the next.</p>
+    <pre>
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue;  // Skips when i == 3
+    }
+    printf("%d ", i);
+}
+    </pre>
+
+    <h4>👉 goto Statement</h4>
+    <p>Jumps to a labeled statement.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    printf("Before goto\n");
+    goto label;
+    printf("This won't be executed");
+label:
+    printf("After goto");
+    return 0;
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

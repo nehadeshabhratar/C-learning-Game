@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+const pseudocodes = [
+    {
+        "question": "Write a C program to read a text file and count the number of words in it.",
+        "correct": "#include <stdio.h>\n#include <ctype.h>\nint countWords(FILE *file) {\n    int count = 0, inWord = 0;\n    char ch;\n    while ((ch = fgetc(file)) != EOF) {\n        if (isspace(ch)) inWord = 0;\n        else if (!inWord) {\n            inWord = 1;\n            count++;\n        }\n    }\n    return count;\n}\nint main() {\n    FILE *file = fopen(\"input.txt\", \"r\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    printf(\"Word count: %d\\n\", countWords(file));\n    fclose(file);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to create a file and write user-inputted text into it.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *file = fopen(\"output.txt\", \"w\");\n    if (!file) { printf(\"Error creating file\\n\"); return 1; }\n    char text[500];\n    printf(\"Enter text: \");\n    fgets(text, sizeof(text), stdin);\n    fputs(text, file);\n    fclose(file);\n    printf(\"Text written to file successfully.\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to copy the contents of one file to another.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *src = fopen(\"source.txt\", \"r\");\n    FILE *dest = fopen(\"destination.txt\", \"w\");\n    if (!src || !dest) { printf(\"Error opening file\\n\"); return 1; }\n    char ch;\n    while ((ch = fgetc(src)) != EOF) {\n        fputc(ch, dest);\n    }\n    fclose(src);\n    fclose(dest);\n    printf(\"File copied successfully.\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to append user-inputted text to an existing file.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *file = fopen(\"data.txt\", \"a\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    char text[200];\n    printf(\"Enter text to append: \");\n    fgets(text, sizeof(text), stdin);\n    fputs(text, file);\n    fclose(file);\n    printf(\"Text appended successfully.\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to count the number of lines in a text file.",
+        "correct": "#include <stdio.h>\nint countLines(FILE *file) {\n    int count = 0;\n    char ch;\n    while ((ch = fgetc(file)) != EOF) {\n        if (ch == '\\n') count++;\n    }\n    return count;\n}\nint main() {\n    FILE *file = fopen(\"input.txt\", \"r\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    printf(\"Number of lines: %d\\n\", countLines(file));\n    fclose(file);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to read numbers from a file and find their sum.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *file = fopen(\"numbers.txt\", \"r\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    int num, sum = 0;\n    while (fscanf(file, \"%d\", &num) != EOF) {\n        sum += num;\n    }\n    fclose(file);\n    printf(\"Sum of numbers: %d\\n\", sum);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to reverse the contents of a text file.",
+        "correct": "#include <stdio.h>\n#include <string.h>\nint main() {\n    FILE *file = fopen(\"input.txt\", \"r\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    fseek(file, 0, SEEK_END);\n    long size = ftell(file);\n    fseek(file, 0, SEEK_SET);\n    char text[size + 1];\n    fread(text, 1, size, file);\n    text[size] = '\\0';\n    fclose(file);\n    file = fopen(\"input.txt\", \"w\");\n    for (long i = size - 1; i >= 0; i--) {\n        fputc(text[i], file);\n    }\n    fclose(file);\n    printf(\"File content reversed successfully.\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to find and replace a word in a file.",
+        "correct": "#include <stdio.h>\n#include <string.h>\nint main() {\n    FILE *file = fopen(\"text.txt\", \"r\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    char buffer[1000], word[50], replacement[50];\n    printf(\"Enter word to find: \");\n    scanf(\"%s\", word);\n    printf(\"Enter replacement word: \");\n    scanf(\"%s\", replacement);\n    fread(buffer, 1, sizeof(buffer), file);\n    fclose(file);\n    char *pos = strstr(buffer, word);\n    if (pos) {\n        strncpy(pos, replacement, strlen(replacement));\n        file = fopen(\"text.txt\", \"w\");\n        fputs(buffer, file);\n        fclose(file);\n        printf(\"Word replaced successfully.\\n\");\n    } else printf(\"Word not found.\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to check if a file exists.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *file = fopen(\"test.txt\", \"r\");\n    if (file) {\n        printf(\"File exists.\\n\");\n        fclose(file);\n    } else {\n        printf(\"File does not exist.\\n\");\n    }\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to count the number of characters in a file.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *file = fopen(\"input.txt\", \"r\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    int count = 0;\n    while (fgetc(file) != EOF) {\n        count++;\n    }\n    fclose(file);\n    printf(\"Character count: %d\\n\", count);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to read and display the contents of a binary file.",
+        "correct": "#include <stdio.h>\nint main() {\n    FILE *file = fopen(\"data.bin\", \"rb\");\n    if (!file) { printf(\"Error opening file\\n\"); return 1; }\n    int num;\n    while (fread(&num, sizeof(int), 1, file)) {\n        printf(\"%d \", num);\n    }\n    fclose(file);\n    printf(\"\\n\");\n    return 0;\n}"
+    }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+            submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "start.html";
+            }
+        }
+    };
+});
+
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
+
+
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 9, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+    </script>
+</body>
+</html>  

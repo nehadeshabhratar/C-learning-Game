@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #2e2e4f, #1e1e3e);
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+.register-container {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: float 3s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+    from {
+        transform: rotateX(10deg) translateY(-10px);
+    }
+    to {
+        transform: rotateX(-10deg) translateY(10px);
+    }
+}
+
+.register-box {
+    width: 380px;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    transform: rotateY(10deg);
+    transition: 0.3s;
+}
+
+.register-box:hover {
+    transform: rotateY(0deg) scale(1.05);
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+}
+
+.input-box {
+    position: relative;
+    margin: 20px 0;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #00ffff;
+    outline: none;
+    color: white;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.register-btn {
+    width: 100%;
+    padding: 10px;
+    background: #00ffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: black;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 15px #00ffff;
+}
+
+.register-btn:hover {
+    background: #0099cc;
+    box-shadow: 0 0 25px #00ffff;
+}
+
+.login-text {
+    margin-top: 10px;
+    color: #aaa;
+}
+
+.login-text a {
+    color: #00ffff;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.login-text a:hover {
+    text-shadow: 0 0 10px #00ffff;
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - C Programming Quiz</title>
+    <link rel="stylesheet" href="L1.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 1 - Quiz 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="quiz-container" id="quiz">
+        <h3 id="question-number" class="question-number">🔹 Question 1/7 🔹</h3>
+        <h2 id="question" class="question"></h2>
+        <p class="timer" id="timer">Time left: 30s</p>
+        <ul id="options-list"></ul>
+        <button id="submit" disabled>Submit</button>
+        <p id="feedback"></p>
+    </div>
+
+<script>
+    const correctSound = new Audio('victory.mp3');
+    const incorrectSound = new Audio('wrong.mp3');
+    const warningSound = new Audio('warning.mpeg');
+    let timer, timeLeft = 30;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+            document.getElementById("username").innerText = username;  // ✅ Display username
+        } else {
+            console.warn("⚠️ No username found, showing Guest");
+            document.getElementById("username").innerText = "Guest";
+        }
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const allQuestions = [
+    { "question": "Which header file is required for file handling in C?", "options": ["<stdlib.h>", "<string.h>", "<stdio.h>", "<conio.h>"], "correct": "<stdio.h>" },
+    { "question": "Which function is used to open a file in C?", "options": ["open()", "fopen()", "fileopen()", "openfile()"], "correct": "fopen()" },
+    { "question": "What does `fopen()` return if the file fails to open?", "options": ["1", "0", "NULL", "EOF"], "correct": "NULL" },
+    { "question": "Which mode is used to open a file for reading only?", "options": ["w", "r", "rw", "a"], "correct": "r" },
+    { "question": "Which mode is used to open a file for writing only?", "options": ["r", "w", "a", "rw"], "correct": "w" },
+    { "question": "Which mode is used to append data to an existing file?", "options": ["w", "r", "a", "rw"], "correct": "a" },
+    { "question": "What will happen if a file opened in write mode ('w') already exists?", "options": ["New data is appended", "The file is deleted and recreated", "An error occurs", "The file remains unchanged"], "correct": "The file is deleted and recreated" },
+    { "question": "Which function is used to close a file in C?", "options": ["closefile()", "fclose()", "fileclose()", "endfile()"], "correct": "fclose()" },
+    { "question": "Which function is used to read a single character from a file?", "options": ["fgetc()", "getc()", "readchar()", "fread()"], "correct": "fgetc()" },
+    { "question": "Which function is used to write a single character to a file?", "options": ["fputc()", "putchar()", "writechar()", "fwrite()"], "correct": "fputc()" },
+    { "question": "Which function is used to read a string from a file?", "options": ["fgets()", "gets()", "readline()", "fread()"], "correct": "fgets()" },
+    { "question": "Which function is used to write a string to a file?", "options": ["fputs()", "puts()", "writeline()", "fwrite()"], "correct": "fputs()" },
+    { "question": "Which function is used to write a block of data to a file?", "options": ["fwrite()", "fputc()", "fprintf()", "write()"], "correct": "fwrite()" },
+    { "question": "Which function is used to read a block of data from a file?", "options": ["fread()", "fgetc()", "read()", "fgets()"], "correct": "fread()" },
+    { "question": "Which function is used to write formatted output to a file?", "options": ["fprintf()", "fwrite()", "fputc()", "printfile()"], "correct": "fprintf()" },
+    { "question": "Which function is used to read formatted input from a file?", "options": ["fscanf()", "fread()", "fgets()", "fgetc()"], "correct": "fscanf()" },
+    { "question": "What is the purpose of `ftell()` in file handling?", "options": ["To tell the file size", "To get the current position in the file", "To rewind the file", "To close the file"], "correct": "To get the current position in the file" },
+    { "question": "Which function is used to move the file pointer to a specific location?", "options": ["fseek()", "seek()", "move()", "goto()"], "correct": "fseek()" },
+    { "question": "Which function is used to move the file pointer to the beginning of the file?", "options": ["rewind()", "restart()", "fseek()", "beginfile()"], "correct": "rewind()" },
+    { "question": "What is the return type of `fopen()`?", "options": ["int", "char*", "FILE*", "void"], "correct": "FILE*" },
+    { "question": "Which function is used to check the end-of-file condition?", "options": ["eof()", "feof()", "file_end()", "fend()"], "correct": "feof()" },
+    { "question": "Which function is used to delete a file?", "options": ["delete()", "remove()", "unlink()", "erase()"], "correct": "remove()" },
+    { "question": "What happens when `fclose()` is called on an already closed file?", "options": ["Nothing", "Runtime error", "File reopens", "File is deleted"], "correct": "Nothing" },
+    { "question": "Which function is used to rename a file?", "options": ["rename()", "change_name()", "file_rename()", "modify()"], "correct": "rename()" },
+    { "question": "What is the default file mode if none is specified?", "options": ["r", "w", "rw", "a"], "correct": "r" },
+    { "question": "Which function is used to check if a file exists before opening?", "options": ["exists()", "fexists()", "access()", "fopen()"], "correct": "access()" },
+    { "question": "Which function is used to open a file in binary mode?", "options": ["fopen(\"file.txt\", \"rb\")", "fopen(\"file.txt\", \"r\")", "open(\"file.txt\", \"binary\")", "fopen(\"file.txt\", \"wb\")"], "correct": "fopen(\"file.txt\", \"rb\")" },
+    { "question": "What is the difference between `w` and `wb` mode in `fopen()`?", "options": ["`w` is for text files, `wb` is for binary files", "`w` appends data, `wb` overwrites", "`w` is for input, `wb` is for output", "No difference"], "correct": "`w` is for text files, `wb` is for binary files" },
+    { "question": "What happens if a file opened in 'r' mode does not exist?", "options": ["A new file is created", "An error occurs", "File is opened in append mode", "It returns NULL"], "correct": "It returns NULL" },
+    { "question": "Which function is used to append content to a file?", "options": ["fappend()", "fwrite()", "fputc()", "fopen(\"file.txt\", \"a\")"], "correct": "fopen(\"file.txt\", \"a\")" },
+    { "question": "Which function is used to flush the output buffer?", "options": ["fflush()", "flush()", "clear()", "fclean()"], "correct": "fflush()" },
+    { "question": "Which function is used to create a temporary file?", "options": ["tmpfile()", "createTempFile()", "makeTemp()", "temp()"], "correct": "tmpfile()" },
+    { "question": "What is the purpose of a file pointer?", "options": ["To keep track of file position", "To hold the file name", "To store file content", "To rename files"], "correct": "To keep track of file position" },
+    { "question": "Which function is used to close all open files?", "options": ["fcloseall()", "close()", "exit()", "clearall()"], "correct": "fcloseall()" }
+];
+ let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+    let quizData = shuffleArray([...allQuestions]).slice(0, 7);
+    let currentQuiz = 0;
+    let score = 0;
+
+    function startTimer() {
+    timeLeft = 30;
+    document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+    
+    let warningSoundPlaying = false; // Track if sound is already playing
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+
+        // Play warning sound repeatedly when time is 10s or less
+        if (timeLeft <= 10 && !warningSoundPlaying) {
+            warningSound.loop = true;  // Enable looping
+            warningSound.play();
+            warningSoundPlaying = true; // Prevent multiple plays
+        }
+
+        // Stop sound when the question changes or time reaches 0
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            warningSound.pause();
+            warningSound.currentTime = 0; // Reset sound
+            autoSubmit(); 
+        }
+
+    }, 1000);
+    }
+
+    function autoSubmit() {
+        clearInterval(timer);
+        document.getElementById("feedback").innerText = "⏳ Time up! ";
+        setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                endQuiz();
+            }
+        }, 2000);
+    }
+
+    function loadQuiz() {
+        clearInterval(timer);
+          warningSound.pause(); // ✅ Stop warning sound
+        warningSound.currentTime = 0; // ✅ Reset sound
+
+        startTimer();
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("submit").disabled = true;
+
+        const currentQuizData = quizData[currentQuiz];
+        document.getElementById("question").innerText = currentQuizData.question;
+        document.getElementById("question-number").innerText = `🔹 Question ${currentQuiz + 1}/7 🔹`;
+
+        shuffleArray(currentQuizData.options).forEach(option => {
+            const li = document.createElement("li");
+            li.innerText = option;
+            li.addEventListener("click", () => {
+                document.querySelectorAll("li").forEach(li =>      li.classList.remove("selected"));
+                li.classList.add("selected");
+                document.getElementById("submit").disabled = false;
+            });
+            document.getElementById("options-list").appendChild(li);
+        });
+    }
+
+   document.getElementById("submit").addEventListener("click", () => {
+    clearInterval(timer);
+    const selected = document.querySelector(".selected");
+    if (!selected) return;
+
+    if (selected.innerText === quizData[currentQuiz].correct) {
+        document.getElementById("feedback").innerText = "✔ Correct!";
+        correctSound.loop = true; // ✅ Keep sound playing
+        correctSound.play();
+        score++;
+    } else {
+        document.getElementById("feedback").innerText = `✖ Incorrect! Correct answer: ${quizData[currentQuiz].correct}`;
+        incorrectSound.loop = true; // ✅ Keep sound playing
+        incorrectSound.play();
+    }
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        correctSound.pause(); 
+        incorrectSound.pause(); 
+        correctSound.currentTime = 0; 
+        incorrectSound.currentTime = 0; 
+        correctSound.loop = false;  
+        incorrectSound.loop = false;  
+
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            endQuiz();
+        }
+    }, 2000);
+});
+    function submitScore(finalScore) {
+    const email = localStorage.getItem("email"); 
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+
+    // Store Level 1 score in localStorage for Level 2
+    localStorage.setItem("totalScore", finalScore); // Store total score for Level 2
+
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 9, level1_score: finalScore }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+   function endQuiz() {
+    // Store Level 1 score in localStorage
+    localStorage.setItem("level1_score", score);
+
+    // Submit score to the server
+    submitScore(score);
+
+    // Display final score
+    document.getElementById("quiz").innerHTML = `<h2>🎉 Your Score: ${score}/7</h2>`;
+
+    // Redirect based on score
+   setTimeout(() => {
+    if (score < 5) {
+        localStorage.setItem("nextPage", "concept.html");  // ✅ Store allowed page
+        window.location.href = "concept.html";  
+    } else {
+        localStorage.setItem("nextPage", "file2.html");  // ✅ Store allowed page
+        window.location.href = "file2.html";  
+    }
+}, 3000);
+
+}
+
+    loadQuiz();
+</script>
+</body>
+</html>

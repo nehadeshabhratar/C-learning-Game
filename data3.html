@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+  const pseudocodes = [
+    { 
+        "question": "Write a C program to store and display student details (name, age, marks) using structures.", 
+        "correct": "#include <stdio.h>\nstruct Student {\n    char name[50];\n    int age;\n    float marks;\n};\nint main() {\n    struct Student s;\n    printf(\"Enter name, age, and marks: \");\n    scanf(\"%s %d %f\", s.name, &s.age, &s.marks);\n    printf(\"Student Details: \\nName: %s\\nAge: %d\\nMarks: %.2f\\n\", s.name, s.age, s.marks);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to read and print an array of floating-point numbers.", 
+        "correct": "#include <stdio.h>\nint main() {\n    float arr[10];\n    int n;\n    printf(\"Enter number of elements: \");\n    scanf(\"%d\", &n);\n    printf(\"Enter %d float numbers: \", n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%f\", &arr[i]);\n    }\n    printf(\"Array elements: \");\n    for (int i = 0; i < n; i++) {\n        printf(\"%.2f \", arr[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to swap two float variables using pointers.", 
+        "correct": "#include <stdio.h>\nvoid swap(float *a, float *b) {\n    float temp = *a;\n    *a = *b;\n    *b = temp;\n}\nint main() {\n    float x, y;\n    printf(\"Enter two float numbers: \");\n    scanf(\"%f %f\", &x, &y);\n    printf(\"Before swap: x = %.2f, y = %.2f\\n\", x, y);\n    swap(&x, &y);\n    printf(\"After swap: x = %.2f, y = %.2f\\n\", x, y);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to convert a lowercase character to uppercase without using built-in functions.", 
+        "correct": "#include <stdio.h>\nint main() {\n    char ch;\n    printf(\"Enter a lowercase character: \");\n    scanf(\" %c\", &ch);\n    if (ch >= 'a' && ch <= 'z') {\n        ch = ch - 32;\n    }\n    printf(\"Uppercase character: %c\\n\", ch);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to print the ASCII values of all uppercase alphabets.", 
+        "correct": "#include <stdio.h>\nint main() {\n    for (char ch = 'A'; ch <= 'Z'; ch++) {\n        printf(\"%c = %d\\n\", ch, ch);\n    }\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to calculate the sum of the digits of a floating-point number.", 
+        "correct": "#include <stdio.h>\nint sumOfDigits(int n) {\n    int sum = 0;\n    while (n > 0) {\n        sum += n % 10;\n        n /= 10;\n    }\n    return sum;\n}\nint main() {\n    float num;\n    int intPart;\n    printf(\"Enter a floating-point number: \");\n    scanf(\"%f\", &num);\n    intPart = (int)num;\n    printf(\"Sum of digits: %d\\n\", sumOfDigits(intPart));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the size of different data types in bytes.", 
+        "correct": "#include <stdio.h>\nint main() {\n    printf(\"Size of int: %lu bytes\\n\", sizeof(int));\n    printf(\"Size of float: %lu bytes\\n\", sizeof(float));\n    printf(\"Size of double: %lu bytes\\n\", sizeof(double));\n    printf(\"Size of char: %lu bytes\\n\", sizeof(char));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to read a string with spaces using fgets() and display it.", 
+        "correct": "#include <stdio.h>\nint main() {\n    char str[100];\n    printf(\"Enter a string: \");\n    fgets(str, sizeof(str), stdin);\n    printf(\"You entered: %s\", str);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to check whether a character is a digit, uppercase letter, or lowercase letter.", 
+        "correct": "#include <stdio.h>\nint main() {\n    char ch;\n    printf(\"Enter a character: \");\n    scanf(\" %c\", &ch);\n    if (ch >= '0' && ch <= '9') printf(\"Digit\\n\");\n    else if (ch >= 'A' && ch <= 'Z') printf(\"Uppercase letter\\n\");\n    else if (ch >= 'a' && ch <= 'z') printf(\"Lowercase letter\\n\");\n    else printf(\"Special character\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to concatenate two strings without using strcat().", 
+        "correct": "#include <stdio.h>\nint main() {\n    char str1[100], str2[100];\n    int i = 0, j = 0;\n    printf(\"Enter first string: \");\n    scanf(\"%s\", str1);\n    printf(\"Enter second string: \");\n    scanf(\"%s\", str2);\n    while (str1[i] != '\\0') i++;\n    while (str2[j] != '\\0') {\n        str1[i] = str2[j];\n        i++;\n        j++;\n    }\n    str1[i] = '\\0';\n    printf(\"Concatenated string: %s\\n\", str1);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the length of a string without using strlen().", 
+        "correct": "#include <stdio.h>\nint main() {\n    char str[100];\n    int length = 0;\n    printf(\"Enter a string: \");\n    scanf(\"%s\", str);\n    while (str[length] != '\\0') {\n        length++;\n    }\n    printf(\"Length of the string: %d\\n\", length);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to declare a union with integer, float, and character variables, and display their values.", 
+        "correct": "#include <stdio.h>\nunion Data {\n    int i;\n    float f;\n    char ch;\n};\nint main() {\n    union Data data;\n    data.i = 10;\n    printf(\"Integer: %d\\n\", data.i);\n    data.f = 5.5;\n    printf(\"Float: %.2f\\n\", data.f);\n    data.ch = 'A';\n    printf(\"Character: %c\\n\", data.ch);\n    return 0;\n}" 
+    }
+
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+            submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "start.html";
+            }
+        }
+    };
+});
+
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
+
+
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 2, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+    </script>
+</body>
+</html>  

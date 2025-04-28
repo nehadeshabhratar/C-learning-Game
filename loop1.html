@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - C Programming Quiz</title>
+    <link rel="stylesheet" href="L1.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 1 - Quiz 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="quiz-container" id="quiz">
+        <h3 id="question-number" class="question-number">🔹 Question 1/7 🔹</h3>
+        <h2 id="question" class="question"></h2>
+        <p class="timer" id="timer">Time left: 30s</p>
+        <ul id="options-list"></ul>
+        <button id="submit" disabled>Submit</button>
+        <p id="feedback"></p>
+    </div>
+
+<script>
+    const correctSound = new Audio('victory.mp3');
+    const incorrectSound = new Audio('wrong.mp3');
+    const warningSound = new Audio('warning.mpeg');
+    let timer, timeLeft = 30;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+            document.getElementById("username").innerText = username;  // ✅ Display username
+        } else {
+            console.warn("⚠️ No username found, showing Guest");
+            document.getElementById("username").innerText = "Guest";
+        }
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const allQuestions = [
+    { "question": "Which of the following is not a loop in C?", "options": ["for", "while", "do-while", "repeat-until"], "correct": "repeat-until" },
+    { "question": "Which loop is used when the number of iterations is known?", "options": ["while", "for", "do-while", "if"], "correct": "for" },
+    { "question": "Which loop is executed at least once?", "options": ["while", "for", "do-while", "switch"], "correct": "do-while" },
+    { "question": "What is the correct syntax of a `for` loop?", "options": ["for (initialization; condition; update)", "for {initialization; condition; update}", "for (condition)", "for initialization; condition; update"], "correct": "for (initialization; condition; update)" },
+    { "question": "Which loop runs indefinitely if no condition is specified?", "options": ["for", "while", "do-while", "All of the above"], "correct": "All of the above" },
+    { "question": "Which statement is used to terminate a loop in C?", "options": ["break", "exit", "stop", "continue"], "correct": "break" },
+    { "question": "What is the output of `for(int i=0; i<3; i++) printf(\"%d\", i);`?", "options": ["012", "123", "321", "Error"], "correct": "012" },
+    { "question": "Which statement skips the current iteration of a loop?", "options": ["skip", "break", "continue", "exit"], "correct": "continue" },
+    { "question": "How many times will this loop execute? `for(int i=0; i<5; i++)`", "options": ["4", "5", "6", "Infinite"], "correct": "5" },
+    { "question": "Which loop is best suited for menu-driven programs?", "options": ["for", "while", "do-while", "switch"], "correct": "do-while" },
+    { "question": "What is the output of `while(0) printf(\"Hello\");`?", "options": ["Hello", "No output", "Error", "0"], "correct": "No output" },
+    { "question": "What happens when the condition in a `while` loop is always true?", "options": ["Executes once", "Infinite loop", "Syntax error", "Program crashes"], "correct": "Infinite loop" },
+    { "question": "Which keyword is used to exit a loop prematurely?", "options": ["break", "continue", "return", "stop"], "correct": "break" },
+    { "question": "Which loop is recommended when the number of iterations is not known?", "options": ["for", "while", "do-while", "switch"], "correct": "while" },
+    { "question": "Which of the following will create an infinite loop?", "options": ["for(;;)", "while(1)", "do {} while(1);", "All of the above"], "correct": "All of the above" },
+    { "question": "What is the correct syntax for a `while` loop?", "options": ["while {condition}", "while (condition) {}", "while condition {}", "while [condition]"], "correct": "while (condition) {}" },
+    { "question": "What will be the output of `int i=0; while(i<3) { printf(\"%d\", i); i++; }`?", "options": ["012", "123", "321", "Error"], "correct": "012" },
+    { "question": "Which statement is used to terminate the loop and return control to the program?", "options": ["break", "exit", "stop", "return"], "correct": "break" },
+    { "question": "Which of the following correctly initializes an infinite loop using `for`?", "options": ["for(;;)", "for(;1;)", "for(;0;)", "for(;true;)"], "correct": "for(;;)" },
+    { "question": "What is the output of `int i=0; do { printf(\"%d\", i); } while(i>0);`?", "options": ["0", "1", "Infinite loop", "Error"], "correct": "0" },
+    { "question": "Which of the following loops allows skipping to the next iteration using `continue`?", "options": ["for", "while", "do-while", "All of the above"], "correct": "All of the above" },
+    { "question": "Which of the following loops is best suited for iterating over arrays?", "options": ["for", "while", "do-while", "switch"], "correct": "for" },
+    { "question": "Which of the following is true about `do-while` loop?", "options": ["Executes at least once", "Executes only if condition is true", "Same as `while`", "Never executes"], "correct": "Executes at least once" },
+    { "question": "What will be the output of `for(int i=0; i<5; i+=2) printf(\"%d\", i);`?", "options": ["024", "135", "01234", "Error"], "correct": "024" },
+    { "question": "Which of the following is an exit-controlled loop?", "options": ["for", "while", "do-while", "All"], "correct": "do-while" },
+    { "question": "What will be the output of `for(int i=5; i>=0; i--) printf(\"%d\", i);`?", "options": ["543210", "012345", "Error", "Infinite loop"], "correct": "543210" },
+    { "question": "Which of the following is true for a `for` loop?", "options": ["Initialization is optional", "Condition is optional", "Update is optional", "All of the above"], "correct": "All of the above" },
+    { "question": "What is the purpose of the update expression in a `for` loop?", "options": ["To initialize variables", "To check condition", "To modify loop variable", "To exit the loop"], "correct": "To modify loop variable" },
+    { "question": "Which loop does NOT require a condition to be specified?", "options": ["for", "while", "do-while", "All"], "correct": "for" },
+    { "question": "Which of the following loops is considered pre-test?", "options": ["for", "while", "do-while", "Both for and while"], "correct": "Both for and while" },
+    { "question": "What will be the output of `int i=10; while(i>0) { i--; printf(\"%d\", i); }`?", "options": ["9876543210", "10987654321", "987654321", "Error"], "correct": "9876543210" },
+    { "question": "Which of the following loops is best for iterating a fixed number of times?", "options": ["for", "while", "do-while", "goto"], "correct": "for" },
+    { "question": "What will be the output of `while(1) printf(\"Hello\");`?", "options": ["Hello", "Infinite Hello", "No output", "Error"], "correct": "Infinite Hello" },
+    { "question": "Which of the following loops is known as an entry-controlled loop?", "options": ["for", "while", "do-while", "Both for and while"], "correct": "Both for and while" }
+];
+ let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+    let quizData = shuffleArray([...allQuestions]).slice(0, 7);
+    let currentQuiz = 0;
+    let score = 0;
+
+    function startTimer() {
+    timeLeft = 30;
+    document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+    
+    let warningSoundPlaying = false; // Track if sound is already playing
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+
+        // Play warning sound repeatedly when time is 10s or less
+        if (timeLeft <= 10 && !warningSoundPlaying) {
+            warningSound.loop = true;  // Enable looping
+            warningSound.play();
+            warningSoundPlaying = true; // Prevent multiple plays
+        }
+
+        // Stop sound when the question changes or time reaches 0
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            warningSound.pause();
+            warningSound.currentTime = 0; // Reset sound
+            autoSubmit(); 
+        }
+
+    }, 1000);
+    }
+
+    function autoSubmit() {
+        clearInterval(timer);
+        document.getElementById("feedback").innerText = "⏳ Time up! ";
+        setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                endQuiz();
+            }
+        }, 2000);
+    }
+
+    function loadQuiz() {
+        clearInterval(timer);
+          warningSound.pause(); // ✅ Stop warning sound
+        warningSound.currentTime = 0; // ✅ Reset sound
+
+        startTimer();
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("submit").disabled = true;
+
+        const currentQuizData = quizData[currentQuiz];
+        document.getElementById("question").innerText = currentQuizData.question;
+        document.getElementById("question-number").innerText = `🔹 Question ${currentQuiz + 1}/7 🔹`;
+
+        shuffleArray(currentQuizData.options).forEach(option => {
+            const li = document.createElement("li");
+            li.innerText = option;
+            li.addEventListener("click", () => {
+                document.querySelectorAll("li").forEach(li =>      li.classList.remove("selected"));
+                li.classList.add("selected");
+                document.getElementById("submit").disabled = false;
+            });
+            document.getElementById("options-list").appendChild(li);
+        });
+    }
+
+   document.getElementById("submit").addEventListener("click", () => {
+    clearInterval(timer);
+    const selected = document.querySelector(".selected");
+    if (!selected) return;
+
+    if (selected.innerText === quizData[currentQuiz].correct) {
+        document.getElementById("feedback").innerText = "✔ Correct!";
+        correctSound.loop = true; // ✅ Keep sound playing
+        correctSound.play();
+        score++;
+    } else {
+        document.getElementById("feedback").innerText = `✖ Incorrect! Correct answer: ${quizData[currentQuiz].correct}`;
+        incorrectSound.loop = true; // ✅ Keep sound playing
+        incorrectSound.play();
+    }
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        correctSound.pause(); 
+        incorrectSound.pause(); 
+        correctSound.currentTime = 0; 
+        incorrectSound.currentTime = 0; 
+        correctSound.loop = false;  
+        incorrectSound.loop = false;  
+
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            endQuiz();
+        }
+    }, 2000);
+});
+    function submitScore(finalScore) {
+    const email = localStorage.getItem("email"); 
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+
+    // Store Level 1 score in localStorage for Level 2
+    localStorage.setItem("totalScore", finalScore); // Store total score for Level 2
+
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 5, level1_score: finalScore }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+   function endQuiz() {
+    // Store Level 1 score in localStorage
+    localStorage.setItem("level1_score", score);
+
+    // Submit score to the server
+    submitScore(score);
+
+    // Display final score
+    document.getElementById("quiz").innerHTML = `<h2>🎉 Your Score: ${score}/7</h2>`;
+
+    // Redirect based on score
+   setTimeout(() => {
+    if (score < 5) {
+        localStorage.setItem("nextPage", "concept.html");  // ✅ Store allowed page
+        window.location.href = "concept.html";  
+    } else {
+        localStorage.setItem("nextPage", "loops2.html");  // ✅ Store allowed page
+        window.location.href = "loops2.html";  
+    }
+}, 3000);
+
+}
+
+    loadQuiz();
+</script>
+</body>
+</html>

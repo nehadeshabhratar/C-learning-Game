@@ -5,56 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>C Programming Concepts</title>
     <style>  
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'Orbitron', sans-serif;
-            margin: 0;
-            padding: 0;
             background: black;
             color: white;
             text-align: center;
-            overflow-y: auto;
-            height: auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            padding: 15px;
+            box-shadow: 0 0 10px cyan;
+        }
+
+        .user-info, .score {
+            font-size: 18px;
+            font-weight: bold;
+            background: rgba(0, 255, 255, 0.8);
+            color: black;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        .navbar-center {
+            font-size: 22px;
+            font-weight: bold;
+            text-shadow: 0 0 15px cyan;
+            flex-grow: 1;
+            text-align: center;
         }
 
         .container {
             max-width: 800px;
             margin: 20px auto;
             text-align: left;
-            padding-bottom: 50px;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://i.gifer.com/3lYk.gif') no-repeat center center/cover;
-            opacity: 0.3;
-            z-index: -1;
-            animation: animateBg 20s infinite linear;
-        }
-
-        @keyframes animateBg {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        h1 {
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
-            color: white;
-            padding: 20px;
-            margin: 0;
-            font-size: 30px;
-            text-shadow: 0px 0px 10px cyan;
         }
 
         .accordion {
@@ -66,108 +59,216 @@
             border: 1px solid cyan;
             text-align: left;
             font-size: 18px;
-            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-radius: 5px;
             margin-bottom: 5px;
+            transition: 0.3s;
             position: relative;
         }
 
         .accordion:hover {
             background: cyan;
             color: black;
-            transform: scale(1.05);
         }
 
-        .panel {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out;
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid cyan;
-            border-radius: 5px;
-            padding: 0 15px;
-        }
-
-        pre {
-            background: black;
-            color: lime;
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* 3D Animated Icon */
         .array-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
             cursor: pointer;
             width: 30px;
             height: 30px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            filter: drop-shadow(0 0 10px cyan);
+            transition: transform 0.3s;
+            position: relative;
         }
 
         .array-icon:hover {
-            transform: scale(1.2) rotate(10deg);
-            filter: drop-shadow(0 0 15px cyan);
+            transform: scale(1.2);
         }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: absolute;
+            background-color: black;
+            color: cyan;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            box-shadow: 0px 0px 10px cyan;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            white-space: nowrap;
+            z-index: 100;
+        }
+
+        .tooltip.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Concept text hover effect */
+        .concept-name {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+        }
+
+        .feedback-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .feedback-button {
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px cyan;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feedback-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px cyan, 0 0 50px magenta;
+        }
+
     </style>
 </head>
 <body>
 
-<h1>🚀 C Programming Concepts - Game Mode 🔥</h1>
+<div class="navbar">
+    <span class="user-info">👤 <span id="username">Guest</span></span>
+    <span class="navbar-center">🚀 C Programming Concepts 🔥</span>
+    <span class="score" id="score">⭐ 0</span></span>
+</div>
 
 <div class="container">
-    <button class="accordion">1️⃣ Basics of C Programming 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+    <button class="accordion" onclick="openConcept('notes1.html')">
+        <span class="concept-name" data-tooltip="Click here for notes">1️⃣ Basics of C Programming</span>
+        <img src="image.JPG" class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('level1.html', event)">
     </button>
-    <button class="accordion">2️⃣ Data Types & Variables 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+
+    <button class="accordion" onclick="openConcept('notes2.html')">
+        <span class="concept-name" data-tooltip="Click here for notes">2️⃣ Data Types & Variables</span>
+        <img src="image.JPG" class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('data1.html', event)">
     </button>
-    <button class="accordion">3️⃣ Operators 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+ <button class="accordion" onclick="openConcept('notes3.html')">
+        <span class="concept-name" data-tooltip="Click here for notes">3️⃣ Operators</span>
+        <img src="image.JPG" class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('operator1.html', event)">
     </button>
-    <button class="accordion">4️⃣ Control Statements 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+
+    <button class="accordion" onclick="openConcept('notes4.html')">
+        <span class="concept-name" data-tooltip="Click here for notes">4️⃣ Control Statements</span>
+        <img src="image.JPG" class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('control1.html', event)">
     </button>
-    <button class="accordion">5️⃣ Loops 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+
+    <button class="accordion" onclick="openConcept('notes5.html')">
+        <span class="concept-name" data-tooltip="Click here for notes">5️⃣ Loops</span>
+        <img src="image.JPG" class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('loop1.html', event)"></button>
+
+ <button class="accordion" onclick="openConcept('notes6.html')">
+<span class="concept-name" data-tooltip="Click here for notes">6️⃣ Functions </span>
+
+        <img src="image.JPG" class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('function1.html', event)">
     </button>
-    <button class="accordion">6️⃣ Functions 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+    <button class="accordion" onclick="openConcept('notes7.html')">
+<span class="concept-name" data-tooltip="Click here for notes">7️⃣ Arrays </span>
+
+        <img src="image.JPG"class="array-icon" data-tooltip="Click here to start Level 1" onclick="openDetails('array1.html', event)">
     </button>
-    <button class="accordion">7️⃣ Arrays 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+    <button class="accordion" onclick="openConcept('notes8.html')">
+<span class="concept-name" data-tooltip="Click here for notes">8️⃣ Pointers </span>
+
+        <img src="image.JPG" class="array-icon"  data-tooltip="Click here to start Level 1"onclick="openDetails('pointer1.html', event)">
     </button>
-    <button class="accordion">8️⃣ Pointers 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
-    </button>
-    <button class="accordion">9️⃣ File Handling 
-        <img src="image.JPG" class="array-icon" onclick="openQuestion()">
+    <button class="accordion" onclick="openConcept('notes9.html')">
+<span class="concept-name" data-tooltip="Click here for notes">9️⃣ File Handling </span>
+ <img src="image.JPG" class="array-icon"  data-tooltip="Click here to start Level 1"onclick="openDetails('file1.html', event)"></button>
+
+</div>
+
+<div class="feedback-container">
+    <button class="feedback-button" onclick="openConcept('feedback.html')">
+        <span class="concept-name" data-tooltip="Click here to give feedback">📝 Feedback</span>
     </button>
 </div>
 
+<div id="tooltip" class="tooltip"></div>
+
 <script>
-    function openQuestion() {
-        window.open("question.html", "_blank");
+  document.addEventListener("DOMContentLoaded", function () {
+    const tooltip = document.getElementById("tooltip");
+    const email = localStorage.getItem("userEmail");
+    const username = localStorage.getItem("username") || "Guest";
+
+    document.getElementById("username").innerText = `User: ${username}`;
+    document.getElementById("score").innerText = "Loading...";
+
+    if (email) {
+        fetch(`http://localhost:3000/getTotalLevel3Score?email=${email}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Total Level 3 Score:", data.totalLevel3Score);
+                document.getElementById("score").innerText = `⭐ Score: ${data.totalLevel3Score ?? 0}`;
+            })
+            .catch(error => {
+                console.error("Error fetching Level 3 score:", error);
+                document.getElementById("score").innerText = "⭐ Score: 0"; // Set only on failure
+            });
+    } else {
+        document.getElementById("score").innerText = "⭐ Score: 0";
     }
 
-    var acc = document.getElementsByClassName("accordion");
-    for (var i = 0; i < acc.length; i++) {
-        acc[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var panel = this.nextElementSibling;
-            if (panel && panel.style.maxHeight) {
-                panel.style.maxHeight = null;
-            } else if (panel) {
-                panel.style.maxHeight = panel.scrollHeight + "px";
-            }
-        });
+    function updateScore(newPoints) {
+        let currentScore = parseInt(localStorage.getItem("userScore") || 0);
+        currentScore += newPoints;
+        localStorage.setItem("userScore", currentScore);
+        document.getElementById("score").innerText = `⭐ Score: ${currentScore}`;
+
+        if (email) {
+            fetch("http://localhost:3001/updateScore", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, score: currentScore }),
+            }).catch(error => console.error("Error updating score:", error));
+        }
     }
+
+    window.openConcept = function(page) {
+           window.location.href = page;
+    };
+
+    window.openDetails = function(page, event) {
+        event.stopPropagation();
+        window.location.href = page;
+    };
+
+    document.querySelectorAll(".array-icon, .concept-name").forEach(element => {
+        element.addEventListener("mouseenter", function (event) {
+            tooltip.innerText = element.getAttribute("data-tooltip");
+            tooltip.style.top = (event.clientY + 10) + "px";
+            tooltip.style.left = (event.clientX + 10) + "px";
+            tooltip.classList.add("show");
+        });
+
+        element.addEventListener("mouseleave", function () {
+            tooltip.classList.remove("show");
+        });
+
+        element.addEventListener("mousemove", function (event) {
+            tooltip.style.top = (event.clientY + 10) + "px";
+            tooltip.style.left = (event.clientX + 10) + "px";
+        });
+    });
+});
 </script>
 
 </body>

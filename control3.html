@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+       <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+const pseudocodes = [
+    {
+        "question": "Write a C program using an if-else statement to check whether a given number is positive, negative, or zero.",
+        "correct": "#include <stdio.h>\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    if (num > 0) {\n        printf(\"Positive\\n\");\n    } else if (num < 0) {\n        printf(\"Negative\\n\");\n    } else {\n        printf(\"Zero\\n\");\n    }\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a switch-case statement to implement a simple menu-driven calculator.",
+        "correct": "#include <stdio.h>\nint main() {\n    char op;\n    float num1, num2;\n    printf(\"Enter operator (+, -, *, /): \");\n    scanf(\" %c\", &op);\n    printf(\"Enter two numbers: \");\n    scanf(\"%f %f\", &num1, &num2);\n    switch (op) {\n        case '+': printf(\"Result: %.2f\\n\", num1 + num2); break;\n        case '-': printf(\"Result: %.2f\\n\", num1 - num2); break;\n        case '*': printf(\"Result: %.2f\\n\", num1 * num2); break;\n        case '/': if (num2 != 0) printf(\"Result: %.2f\\n\", num1 / num2); else printf(\"Division by zero error\\n\"); break;\n        default: printf(\"Invalid operator\\n\");\n    }\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program to find the largest of three numbers using nested if-else statements.",
+        "correct": "#include <stdio.h>\nint main() {\n    int a, b, c;\n    printf(\"Enter three numbers: \");\n    scanf(\"%d %d %d\", &a, &b, &c);\n    if (a >= b && a >= c) {\n        printf(\"Largest number: %d\\n\", a);\n    } else if (b >= a && b >= c) {\n        printf(\"Largest number: %d\\n\", b);\n    } else {\n        printf(\"Largest number: %d\\n\", c);\n    }\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a for loop to print all even numbers from 1 to N.",
+        "correct": "#include <stdio.h>\nint main() {\n    int n;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &n);\n    printf(\"Even numbers from 1 to %d: \", n);\n    for (int i = 2; i <= n; i += 2) {\n        printf(\"%d \", i);\n    }\n    printf(\"\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a while loop to reverse a given number.",
+        "correct": "#include <stdio.h>\nint main() {\n    int num, rev = 0;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    while (num > 0) {\n        rev = rev * 10 + num % 10;\n        num /= 10;\n    }\n    printf(\"Reversed number: %d\\n\", rev);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a do-while loop to sum digits of a given number.",
+        "correct": "#include <stdio.h>\nint main() {\n    int num, sum = 0;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    do {\n        sum += num % 10;\n        num /= 10;\n    } while (num > 0);\n    printf(\"Sum of digits: %d\\n\", sum);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a switch-case to display the day of the week based on user input (1-7).",
+        "correct": "#include <stdio.h>\nint main() {\n    int day;\n    printf(\"Enter day number (1-7): \");\n    scanf(\"%d\", &day);\n    switch (day) {\n        case 1: printf(\"Monday\\n\"); break;\n        case 2: printf(\"Tuesday\\n\"); break;\n        case 3: printf(\"Wednesday\\n\"); break;\n        case 4: printf(\"Thursday\\n\"); break;\n        case 5: printf(\"Friday\\n\"); break;\n        case 6: printf(\"Saturday\\n\"); break;\n        case 7: printf(\"Sunday\\n\"); break;\n        default: printf(\"Invalid input\\n\");\n    }\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a for loop to find the factorial of a number.",
+        "correct": "#include <stdio.h>\nint main() {\n    int num, fact = 1;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    for (int i = 1; i <= num; i++) {\n        fact *= i;\n    }\n    printf(\"Factorial: %d\\n\", fact);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a while loop to check if a number is a palindrome.",
+        "correct": "#include <stdio.h>\nint main() {\n    int num, rev = 0, temp;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    temp = num;\n    while (temp > 0) {\n        rev = rev * 10 + temp % 10;\n        temp /= 10;\n    }\n    if (num == rev) printf(\"Palindrome\\n\");\n    else printf(\"Not a palindrome\\n\");\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using an if-else ladder to categorize a person's age group (child, teenager, adult, senior).",
+        "correct": "#include <stdio.h>\nint main() {\n    int age;\n    printf(\"Enter age: \");\n    scanf(\"%d\", &age);\n    if (age < 13) {\n        printf(\"Child\\n\");\n    } else if (age < 20) {\n        printf(\"Teenager\\n\");\n    } else if (age < 60) {\n        printf(\"Adult\\n\");\n    } else {\n        printf(\"Senior\\n\");\n    }\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a do-while loop to continuously take input from the user until they enter a negative number.",
+        "correct": "#include <stdio.h>\nint main() {\n    int num;\n    do {\n        printf(\"Enter a number (negative to stop): \");\n        scanf(\"%d\", &num);\n        if (num >= 0) printf(\"You entered: %d\\n\", num);\n    } while (num >= 0);\n    return 0;\n}"
+    },
+    {
+        "question": "Write a C program using a switch-case to check the type of a character (vowel, consonant, digit, or special character).",
+        "correct": "#include <stdio.h>\n#include <ctype.h>\nint main() {\n    char ch;\n    printf(\"Enter a character: \");\n    scanf(\" %c\", &ch);\n    if (isdigit(ch)) {\n        printf(\"Digit\\n\");\n    } else if (isalpha(ch)) {\n        switch (tolower(ch)) {\n            case 'a': case 'e': case 'i': case 'o': case 'u':\n                printf(\"Vowel\\n\");\n                break;\n            default:\n                printf(\"Consonant\\n\");\n        }\n    } else {\n        printf(\"Special character\\n\");\n    }\n    return 0;\n}"
+    }
+
+  ];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+                        submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "start.html";
+            }
+        }
+    };
+});
+
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
+
+
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 4, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+    </script>
+</body>
+</html>  

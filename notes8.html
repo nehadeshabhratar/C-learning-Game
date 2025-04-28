@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointers in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>📌 Pointers in C</h1>
+
+<div class="container">
+    <h2>🔹 What is a Pointer?</h2>
+    <p>A **pointer** is a variable that stores the memory address of another variable. Pointers allow efficient memory management and direct memory access.</p>
+
+    <h2>🔹 Declaring and Initializing a Pointer</h2>
+    
+    <h3>📌 Declaration</h3>
+    <pre>
+dataType *pointerName;
+    </pre>
+    <p>Example:</p>
+    <pre>
+int *ptr;  // Declares a pointer to an integer
+    </pre>
+
+    <h3>📌 Initialization</h3>
+    <pre>
+int num = 10;
+int *ptr = &num;  // Pointer stores the address of num
+    </pre>
+
+    <h2>🔹 Accessing Variable Using Pointers</h2>
+    <p>We use the **dereference operator (*)** to access the value stored at the memory address.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int num = 10;
+    int *ptr = &num;
+    printf("Value of num: %d", *ptr);  // Output: 10
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Pointer Arithmetic</h2>
+    <p>We can perform arithmetic operations on pointers:</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[3] = {10, 20, 30};
+    int *ptr = arr;
+    printf("%d ", *ptr);      // Output: 10
+    ptr++;                    // Move to next element
+    printf("%d ", *ptr);      // Output: 20
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Pointers and Arrays</h2>
+    <p>Arrays and pointers are closely related.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[3] = {1, 2, 3};
+    int *ptr = arr;
+    for (int i = 0; i < 3; i++) {
+        printf("%d ", *(ptr + i));  // Access elements using pointer arithmetic
+    }
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Pointers and Functions</h2>
+    
+    <h3>📌 1. Passing Pointers to Functions</h3>
+    <pre>
+#include <stdio.h>
+void updateValue(int *ptr) {
+    *ptr = 50;
+}
+int main() {
+    int num = 10;
+    updateValue(&num);
+    printf("Updated value: %d", num);  // Output: 50
+    return 0;
+}
+    </pre>
+
+    <h3>📌 2. Returning Pointers from Functions</h3>
+    <pre>
+#include <stdio.h>
+int* getPointer(int *ptr) {
+    return ptr;
+}
+int main() {
+    int num = 100;
+    int *ptr = getPointer(&num);
+    printf("%d", *ptr);  // Output: 100
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Dynamic Memory Allocation</h2>
+    <p>Pointers are used to allocate memory dynamically using **malloc()**, **calloc()**, **realloc()**, and **free()**.</p>
+    <pre>
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+    int *ptr;
+    ptr = (int*) malloc(5 * sizeof(int));  // Allocating memory for 5 integers
+    if (ptr == NULL) {
+        printf("Memory allocation failed");
+        return 1;
+    }
+    for (int i = 0; i < 5; i++) {
+        ptr[i] = i + 1;
+    }
+    for (int i = 0; i < 5; i++) {
+        printf("%d ", ptr[i]);  // Output: 1 2 3 4 5
+    }
+    free(ptr);  // Free the allocated memory
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Pointers to Pointers (Double Pointers)</h2>
+    <p>A pointer that stores the address of another pointer.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int num = 20;
+    int *ptr = &num;
+    int **doublePtr = &ptr;
+    printf("Value of num: %d", **doublePtr);  // Output: 20
+    return 0;
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

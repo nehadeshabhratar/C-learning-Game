@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Types & Variables in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>📌 Data Types & Variables in C</h1>
+
+<div class="container">
+    <h2>🔹 What are Variables?</h2>
+    <p>Variables in C are used to store values in memory. They must be declared before use.</p>
+    
+    <h3>📌 Variable Declaration</h3>
+    <pre>
+int age;  // Declaring an integer variable
+float price;  // Declaring a floating-point variable
+char grade;  // Declaring a character variable
+    </pre>
+    
+    <h3>📌 Variable Initialization</h3>
+    <pre>
+int age = 25;  // Declaring and assigning a value
+float price = 99.99;
+char grade = 'A';
+    </pre>
+
+    <h2>🔹 Data Types in C</h2>
+    <p>Data types define the type and size of data stored in a variable.</p>
+    
+    <h3>📌 Primary Data Types</h3>
+    <table border="1">
+        <tr>
+            <th>Data Type</th>
+            <th>Size</th>
+            <th>Range</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><span class="keyword">int</span></td>
+            <td>4 bytes</td>
+            <td>-2,147,483,648 to 2,147,483,647</td>
+            <td>int x = 10;</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">char</span></td>
+            <td>1 byte</td>
+            <td>-128 to 127</td>
+            <td>char ch = 'A';</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">float</span></td>
+            <td>4 bytes</td>
+            <td>3.4E-38 to 3.4E+38</td>
+            <td>float pi = 3.14;</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">double</span></td>
+            <td>8 bytes</td>
+            <td>1.7E-308 to 1.7E+308</td>
+            <td>double d = 5.678;</td>
+        </tr>
+    </table>
+
+    <h3>📌 Derived Data Types</h3>
+    <ul>
+        <li><span class="keyword">Arrays</span> - Collection of similar data types. Example: <code>int arr[5];</code></li>
+        <li><span class="keyword">Pointers</span> - Variables that store memory addresses. Example: <code>int *ptr;</code></li>
+        <li><span class="keyword">Structures</span> - Used to group different data types. Example:
+            <pre>
+struct Student {
+    int id;
+    char name[50];
+    float marks;
+};
+            </pre>
+        </li>
+    </ul>
+
+    <h3>📌 Type Modifiers</h3>
+    <p>Type modifiers change the properties of basic data types.</p>
+    <ul>
+        <li><span class="keyword">short</span> - Reduces the size of an integer. Example: <code>short int a;</code></li>
+        <li><span class="keyword">long</span> - Increases the size of an integer. Example: <code>long int b;</code></li>
+        <li><span class="keyword">signed</span> - Allows negative and positive values.</li>
+        <li><span class="keyword">unsigned</span> - Allows only positive values.</li>
+    </ul>
+
+    <h2>🔹 Constants in C</h2>
+    <p>Constants store values that do not change.</p>
+    <pre>
+#define PI 3.1415  // Macro constant
+const int MAX = 100;  // Constant variable
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

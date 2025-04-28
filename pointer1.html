@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - C Programming Quiz</title>
+    <link rel="stylesheet" href="L1.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 1 - Quiz 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="quiz-container" id="quiz">
+        <h3 id="question-number" class="question-number">🔹 Question 1/7 🔹</h3>
+        <h2 id="question" class="question"></h2>
+        <p class="timer" id="timer">Time left: 30s</p>
+        <ul id="options-list"></ul>
+        <button id="submit" disabled>Submit</button>
+        <p id="feedback"></p>
+    </div>
+
+<script>
+    const correctSound = new Audio('victory.mp3');
+    const incorrectSound = new Audio('wrong.mp3');
+    const warningSound = new Audio('warning.mpeg');
+    let timer, timeLeft = 30;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+            document.getElementById("username").innerText = username;  // ✅ Display username
+        } else {
+            console.warn("⚠️ No username found, showing Guest");
+            document.getElementById("username").innerText = "Guest";
+        }
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const allQuestions = [
+    { "question": "What is a pointer in C?", "options": ["A variable that stores an address", "A function", "A special type of array", "An integer variable"], "correct": "A variable that stores an address" },
+    { "question": "Which symbol is used to declare a pointer in C?", "options": ["&", "*", "->", "#"], "correct": "*" },
+    { "question": "Which operator is used to get the address of a variable?", "options": ["*", "&", "@", "!"], "correct": "&" },
+    { "question": "How do you declare a pointer to an integer?", "options": ["int ptr;", "int *ptr;", "pointer int ptr;", "int &ptr;"], "correct": "int *ptr;" },
+    { "question": "Which operator is used to access the value stored at a pointer?", "options": ["*", "&", "#", "@@"], "correct": "*" },
+    { "question": "What does the NULL pointer represent?", "options": ["An invalid pointer", "A pointer pointing to zero", "A pointer without an address", "All of the above"], "correct": "All of the above" },
+    { "question": "What will happen if you try to dereference a NULL pointer?", "options": ["Segmentation fault", "Compiler error", "Nothing", "It will return NULL"], "correct": "Segmentation fault" },
+    { "question": "What is the output of `sizeof(int*)` on a 64-bit system?", "options": ["2", "4", "8", "Depends on compiler"], "correct": "8" },
+    { "question": "Which statement correctly assigns an address to a pointer?", "options": ["ptr = &var;", "ptr = var;", "&ptr = var;", "ptr = *var;"], "correct": "ptr = &var;" },
+    { "question": "What is pointer arithmetic used for?", "options": ["Performing calculations on pointer addresses", "Adding two pointers", "Comparing two pointers", "Sorting pointers"], "correct": "Performing calculations on pointer addresses" },
+    { "question": "What will happen if you add 1 to a pointer?", "options": ["It moves to the next memory location", "It increases the address by 1 byte", "It remains unchanged", "It results in an error"], "correct": "It moves to the next memory location" },
+    { "question": "Which of the following is the correct syntax to declare a pointer to a float?", "options": ["float ptr;", "float *ptr;", "pointer float ptr;", "float& ptr;"], "correct": "float *ptr;" },
+    { "question": "What does `int **ptr;` represent?", "options": ["A pointer to an integer", "A pointer to a pointer", "A pointer to a function", "A pointer to an array"], "correct": "A pointer to a pointer" },
+    { "question": "Which type of pointer stores the memory address of another pointer?", "options": ["Null pointer", "Void pointer", "Double pointer", "Function pointer"], "correct": "Double pointer" },
+    { "question": "Which type of pointer can hold the address of any data type?", "options": ["char pointer", "Void pointer", "Int pointer", "Float pointer"], "correct": "Void pointer" },
+    { "question": "Which function is used to allocate memory dynamically in C?", "options": ["malloc()", "allocate()", "new()", "alloc()"], "correct": "malloc()" },
+    { "question": "Which function is used to deallocate memory in C?", "options": ["delete()", "free()", "remove()", "clear()"], "correct": "free()" },
+    { "question": "Which of the following is true about pointer and array names?", "options": ["Array name is a pointer", "Array name points to the first element", "Both A and B", "None of the above"], "correct": "Both A and B" },
+    { "question": "What will `ptr++` do when `ptr` is a pointer to an integer?", "options": ["Increase the value stored at ptr", "Move to the next integer in memory", "Cause an error", "None of the above"], "correct": "Move to the next integer in memory" },
+    { "question": "What is the address stored in an uninitialized pointer?", "options": ["NULL", "Garbage value", "0", "Address of first element"], "correct": "Garbage value" },
+    { "question": "Which of the following operations is NOT allowed with pointers?", "options": ["Addition", "Subtraction", "Multiplication", "Comparison"], "correct": "Multiplication" },
+    { "question": "Which statement about pointer arithmetic is true?", "options": ["Adding an integer to a pointer moves it forward", "Subtracting an integer moves it backward", "Both A and B", "Pointer arithmetic is not allowed"], "correct": "Both A and B" },
+    { "question": "How do you correctly assign a pointer to a character variable?", "options": ["char *ptr = &ch;", "char ptr = &ch;", "char &ptr = ch;", "char ptr = ch;"], "correct": "char *ptr = &ch;" },
+    { "question": "Which of the following correctly defines an array of pointers?", "options": ["int ptr[5];", "int *ptr[5];", "int (*ptr)[5];", "int &ptr[5];"], "correct": "int *ptr[5];" },
+    { "question": "Which of the following is NOT a valid pointer operation?", "options": ["ptr++", "ptr--", "ptr * ptr", "ptr + 5"], "correct": "ptr * ptr" },
+    { "question": "What is the output of `sizeof(ptr)` where `ptr` is a pointer?", "options": ["Size of the data type", "Size of the pointer", "Size of the memory allocated", "Depends on compiler"], "correct": "Size of the pointer" },
+    { "question": "Which function is used to reallocate memory in C?", "options": ["malloc()", "calloc()", "realloc()", "resize()"], "correct": "realloc()" },
+    { "question": "Which of the following statements is correct regarding dangling pointers?", "options": ["Pointer pointing to a deleted memory location", "Pointer initialized with NULL", "Pointer before memory allocation", "Pointer after being reassigned"], "correct": "Pointer pointing to a deleted memory location" },
+    { "question": "What is pointer decay?", "options": ["Conversion of array to pointer", "Conversion of pointer to integer", "Loss of pointer value", "Pointer becoming NULL"], "correct": "Conversion of array to pointer" },
+    { "question": "What happens when a pointer is incremented?", "options": ["It moves to the next memory location", "It moves to the previous memory location", "It adds 1 to the stored value", "It results in an error"], "correct": "It moves to the next memory location" },
+    { "question": "What is the correct way to declare a function pointer?", "options": ["int *func();", "int (*func)();", "int func*();", "int func();"], "correct": "int (*func)();" },
+    { "question": "What is the main advantage of pointers?", "options": ["Faster execution", "Efficient memory management", "Direct memory access", "All of the above"], "correct": "All of the above" }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs ! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+    let quizData = shuffleArray([...allQuestions]).slice(0, 7);
+    let currentQuiz = 0;
+    let score = 0;
+
+    function startTimer() {
+    timeLeft = 30;
+    document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+    
+    let warningSoundPlaying = false; // Track if sound is already playing
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+
+        // Play warning sound repeatedly when time is 10s or less
+        if (timeLeft <= 10 && !warningSoundPlaying) {
+            warningSound.loop = true;  // Enable looping
+            warningSound.play();
+            warningSoundPlaying = true; // Prevent multiple plays
+        }
+
+        // Stop sound when the question changes or time reaches 0
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            warningSound.pause();
+            warningSound.currentTime = 0; // Reset sound
+            autoSubmit(); 
+        }
+
+    }, 1000);
+    }
+
+    function autoSubmit() {
+        clearInterval(timer);
+        document.getElementById("feedback").innerText = "⏳ Time up! ";
+        setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                endQuiz();
+            }
+        }, 2000);
+    }
+
+    function loadQuiz() {
+        clearInterval(timer);
+          warningSound.pause(); // ✅ Stop warning sound
+        warningSound.currentTime = 0; // ✅ Reset sound
+
+        startTimer();
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("submit").disabled = true;
+
+        const currentQuizData = quizData[currentQuiz];
+        document.getElementById("question").innerText = currentQuizData.question;
+        document.getElementById("question-number").innerText = `🔹 Question ${currentQuiz + 1}/7 🔹`;
+
+        shuffleArray(currentQuizData.options).forEach(option => {
+            const li = document.createElement("li");
+            li.innerText = option;
+            li.addEventListener("click", () => {
+                document.querySelectorAll("li").forEach(li =>      li.classList.remove("selected"));
+                li.classList.add("selected");
+                document.getElementById("submit").disabled = false;
+            });
+            document.getElementById("options-list").appendChild(li);
+        });
+    }
+
+   document.getElementById("submit").addEventListener("click", () => {
+    clearInterval(timer);
+    const selected = document.querySelector(".selected");
+    if (!selected) return;
+
+    if (selected.innerText === quizData[currentQuiz].correct) {
+        document.getElementById("feedback").innerText = "✔ Correct!";
+        correctSound.loop = true; // ✅ Keep sound playing
+        correctSound.play();
+        score++;
+    } else {
+        document.getElementById("feedback").innerText = `✖ Incorrect! Correct answer: ${quizData[currentQuiz].correct}`;
+        incorrectSound.loop = true; // ✅ Keep sound playing
+        incorrectSound.play();
+    }
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        correctSound.pause(); 
+        incorrectSound.pause(); 
+        correctSound.currentTime = 0; 
+        incorrectSound.currentTime = 0; 
+        correctSound.loop = false;  
+        incorrectSound.loop = false;  
+
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            endQuiz();
+        }
+    }, 2000);
+});
+    function submitScore(finalScore) {
+    const email = localStorage.getItem("email"); 
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+
+    // Store Level 1 score in localStorage for Level 2
+    localStorage.setItem("totalScore", finalScore); // Store total score for Level 2
+
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 8, level1_score: finalScore }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+   function endQuiz() {
+    // Store Level 1 score in localStorage
+    localStorage.setItem("level1_score", score);
+
+    // Submit score to the server
+    submitScore(score);
+
+    // Display final score
+    document.getElementById("quiz").innerHTML = `<h2>🎉 Your Score: ${score}/7</h2>`;
+
+    // Redirect based on score
+   setTimeout(() => {
+    if (score < 5) {
+        localStorage.setItem("nextPage", "concept.html");  // ✅ Store allowed page
+        window.location.href = "concept.html";  
+    } else {
+        localStorage.setItem("nextPage", "pointer2.html");  // ✅ Store allowed page
+        window.location.href = "pointer2.html";  
+    }
+}, 3000);
+
+}
+
+    loadQuiz();
+</script>
+</body>
+</html>

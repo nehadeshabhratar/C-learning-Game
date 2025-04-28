@@ -1,49 +1,193 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle, #000428, #004e92);
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .panel-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #00ffcc;
+            box-shadow: 0 0 20px #00ffcc;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            max-width: 450px;
+        }
+
+        h2 {
+            color: #00ffcc;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .ratings-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .rating {
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .rating img {
+            width: 60px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.7));
+            transition: transform 0.3s;
+        }
+
+        .rating:hover img {
+            transform: scale(1.2);
+        }
+
+        .rating.active {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.7);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 2px solid #00ffcc;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00ffcc;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            outline: none;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #00ffcc, #ff00ff);
+            color: white;
+            border: 2px solid #ff00ff;
+            border-radius: 50px;
+            padding: 12px 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
+        }
+
+        .thank-you {
+            font-size: 16px;
+            font-weight: bold;
+            color: #00ffcc;
+            margin-top: 15px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Feedback Form</title>
+</head>
 <body>
-<body bgcolor="lightgrey">
-<style>
-*{
-max-width:400px;
-margin:auto;
-}
-h2{border:7px;
-}
-</style>
-<body>
-<table border="5" style="background-color:yellow;">
-<tr>
-<td>
-<font color="indigo"><tittle><center><h2>FEEDBACK FORM</h2></center></tittle></font>
-<b><h3><label>Student name : </label>
-<input type="text-box" placeholder="enter your name"></h3></b>
-<b><h3>Department:</h3></b>
-<input type="radio" name="Department">IT<br>
-<input type="radio" name="Department">EXTC<br>
-<input type="radio" name="Department">MECHANICAL<br>
-<input type="radio" name="Department">CSE</br>
-<b><h3>Select Gender:</h3></b>
-<input type="radio" name="gender">male
-<input type="radio" name="gender">female<br>
-<h3>select year</h3><select id="year">
-<option value="--Select year--">--Select year--</option>
-<option value="First year">First year"</option>
-<option value="second year">second year"</option>
-<option value="Third year">Third year"</option>
-<option value="Final year">Final year"</option></select><br>
-<b><h3>Which teacher you want</h3></b>
-<input type="checkbox">Rupali Deshmukh<br>
-<input type="checkbox">Yogesh Rochlani<br>
-<input type="checkbox">Pravin Kaware<br>
-<input type="checkbox">Swapnil Nehar<br>
-<input type="checkbox">Anjali Raut<br>
-<b><h3>Please rate of Teachers of your class:</h3></b>
-<h4>Rupali Deshmukh :</h4><input type="checkbox" name="rate">Excellent<input type="checkbox" name="rate">satisfied<input type="checkbox" name="rate">unsatisfied
-<br><h4>Yogesh Rochlani:</h4><input type="checkbox" name="rate">Excellent<input type="checkbox" name="rate">satisfied<input type="checkbox" name="rate">unsatisfied
-<br><h4>Pravin Kaware:</h4><input type="checkbox" name="rate">Excellent<input type="checkbox" name="rate">satisfied<input type="checkbox"name="rate">unsatisfied
-<br><h4>Swapnil Nehar:</h4><input type="checkbox" name="rate">Excellent<input type="checkbox" name="rate">satisfied<input type="checkbox" name="rate">unsatisfied
-<br><h4>Anjali Raut:</h4><input type="checkbox" name="rate">Excellent<input type="checkbox" name="rate">satisfied<input type="checkbox" name="rate">unsatisfied
-<br><h3><b>Please add your comments/suggestion about college or teacher:<b><br></h3>
-<textarea rows="5"cols="50" placeholder="add your comment"></textarea><br>
-<center><button><font color="purple">SUBMIT</font></button></center>
+    <div id="panel" class="panel-container">
+        <h2>💥 RATE OUR GAMEPLAY EXPERIENCE 💥</h2>
+
+        <div class="ratings-container">
+            <div class="rating" data-rating="Bad">
+                <img src="https://img.icons8.com/emoji/48/000000/angry-face-emoji.png" alt="">
+                <small style="color: white;">😡 Bad</small>
+            </div>
+            <div class="rating" data-rating="Neutral">
+                <img src="https://img.icons8.com/emoji/48/000000/neutral-face.png" alt="">
+                <small style="color: white;">😐 Neutral</small>
+            </div>
+            <div class="rating" data-rating="Amazing">
+                <img src="https://img.icons8.com/emoji/48/000000/smiling-face.png" alt="">
+                <small style="color: white;">😃 Amazing!</small>
+            </div>
+        </div>
+
+        <input type="hidden" id="selectedRating" value="">
+        <textarea id="feedbackInput" placeholder="Type your thoughts..."></textarea>
+        <button class="btn" id="send">🚀 Submit Feedback</button>
+    </div>
+
+    <script>
+        document.querySelectorAll('.rating').forEach((rating) => {
+            rating.addEventListener('click', function () {
+                document.querySelectorAll('.rating').forEach(r => r.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('selectedRating').value = this.getAttribute('data-rating');
+            });
+        });
+
+        document.getElementById('send').addEventListener('click', async function () {
+            const rating = document.getElementById('selectedRating').value;
+            const feedback = document.getElementById('feedbackInput').value.trim();
+
+            if (!rating || !feedback) {
+                alert("Please select a rating and enter your feedback!");
+                return;
+            }
+
+            try {
+                const response = await fetch('/submit-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ rating, feedback })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show Thank You Message
+                    document.getElementById('panel').innerHTML = `
+                        <h2 class="thank-you">Thank You for Your Feedback! 🚀</h2>
+                    `;
+
+                    // Redirect after 2-3 seconds
+                    setTimeout(() => {
+                        window.location.href = "concept.html";
+                    }, 2500);
+                } else {
+                    alert("Failed to submit feedback. Please try again.");
+                }
+            } catch (error) {
+                alert("Something went wrong. Please try again later.");
+            }
+        });
+    </script>
 </body>
 </html>

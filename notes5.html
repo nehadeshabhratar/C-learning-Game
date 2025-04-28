@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loops in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>🔄 Loops in C</h1>
+
+<div class="container">
+    <h2>📌 What are Loops?</h2>
+    <p>Loops in C are used to execute a block of code multiple times. They reduce redundancy and make code more efficient.</p>
+
+    <h2>🔹 Types of Loops in C</h2>
+
+    <h3>📌 1. for Loop</h3>
+    <p>The <span class="keyword">for</span> loop is used when the number of iterations is known beforehand.</p>
+    <pre>
+for (initialization; condition; increment/decrement) {
+    // Code to execute
+}
+    </pre>
+    <p><b>Example:</b> Print numbers from 1 to 5.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    for (int i = 1; i <= 5; i++) {
+        printf("%d ", i);
+    }
+    return 0;
+}
+    </pre>
+
+    <h3>📌 2. while Loop</h3>
+    <p>The <span class="keyword">while</span> loop executes a block of code as long as the condition is true.</p>
+    <pre>
+while (condition) {
+    // Code to execute
+}
+    </pre>
+    <p><b>Example:</b> Print numbers from 1 to 5.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int i = 1;
+    while (i <= 5) {
+        printf("%d ", i);
+        i++;
+    }
+    return 0;
+}
+    </pre>
+
+    <h3>📌 3. do-while Loop</h3>
+    <p>The <span class="keyword">do-while</span> loop executes the code at least once before checking the condition.</p>
+    <pre>
+do {
+    // Code to execute
+} while (condition);
+    </pre>
+    <p><b>Example:</b> Print numbers from 1 to 5.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int i = 1;
+    do {
+        printf("%d ", i);
+        i++;
+    } while (i <= 5);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Loop Control Statements</h2>
+    
+    <h3>📌 break Statement</h3>
+    <p>The <span class="keyword">break</span> statement exits the loop immediately.</p>
+    <pre>
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        break;  // Stops when i == 3
+    }
+    printf("%d ", i);
+}
+    </pre>
+
+    <h3>📌 continue Statement</h3>
+    <p>The <span class="keyword">continue</span> statement skips the current iteration and moves to the next.</p>
+    <pre>
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue;  // Skips when i == 3
+    }
+    printf("%d ", i);
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

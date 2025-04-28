@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrays in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>📌 Arrays in C</h1>
+
+<div class="container">
+    <h2>🔹 What is an Array?</h2>
+    <p>An array is a collection of elements of the same data type stored in contiguous memory locations. It allows storing multiple values using a single variable name.</p>
+
+    <h2>🔹 Declaring and Initializing an Array</h2>
+    
+    <h3>📌 Declaration</h3>
+    <pre>
+dataType arrayName[size];
+    </pre>
+    <p>Example:</p>
+    <pre>
+int numbers[5];  // Declares an integer array with 5 elements
+    </pre>
+
+    <h3>📌 Initialization</h3>
+    <pre>
+int numbers[5] = {1, 2, 3, 4, 5};  // Assigning values during declaration
+int numbers[] = {10, 20, 30, 40}; // Size can be omitted when values are given
+    </pre>
+
+    <h2>🔹 Accessing Array Elements</h2>
+    <p>Array elements are accessed using an index, starting from **0**.</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[3] = {10, 20, 30};
+    printf("First element: %d", arr[0]);  // Output: 10
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Types of Arrays</h2>
+    
+    <h3>📌 1. One-Dimensional Array</h3>
+    <p>A linear list of elements:</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[4] = {1, 2, 3, 4};
+    for (int i = 0; i < 4; i++) {
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+    </pre>
+
+    <h3>📌 2. Multi-Dimensional Arrays</h3>
+    <p>An array of arrays, commonly a **2D array (Matrix)**:</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int matrix[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    printf("Element at [1][2]: %d", matrix[1][2]);  // Output: 6
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Array Operations</h2>
+    
+    <h3>📌 1. Traversing an Array</h3>
+    <p>Using a loop to access all elements:</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[5] = {10, 20, 30, 40, 50};
+    for (int i = 0; i < 5; i++) {
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+    </pre>
+
+    <h3>📌 2. Array Input from User</h3>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[3];
+    printf("Enter 3 numbers: ");
+    for (int i = 0; i < 3; i++) {
+        scanf("%d", &arr[i]);
+    }
+    printf("You entered: ");
+    for (int i = 0; i < 3; i++) {
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
+    </pre>
+
+    <h3>📌 3. Finding the Largest Element in an Array</h3>
+    <pre>
+#include <stdio.h>
+int main() {
+    int arr[5] = {10, 45, 22, 78, 99};
+    int max = arr[0];
+    for (int i = 1; i < 5; i++) {
+        if (arr[i] > max) {
+            max = arr[i];
+        }
+    }
+    printf("Largest element: %d", max);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Strings as Character Arrays</h2>
+    <p>In C, strings are arrays of characters ending with a null character ('\0').</p>
+    <pre>
+#include <stdio.h>
+int main() {
+    char name[] = "Hello";
+    printf("%s", name);
+    return 0;
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

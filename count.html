@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animated Countdown</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
         * {
             box-sizing: border-box;
         }
@@ -152,25 +150,20 @@
         <button class="go-button" onclick="startGame()">Start Game</button>
     </div>
 
+    <!-- Audio Elements -->
+    <audio id="countdownSound" src="2.wav" loop></audio>
+    <audio id="startSound" src="1.wav"></audio>
+
     <script>
         const nums = document.querySelectorAll('.nums span');
         const counter = document.querySelector('.counter');
         const finalMessage = document.querySelector('.final');
-
-        runAnimation();
-
-        function resetDOM() {
-            counter.classList.remove('hide');
-            finalMessage.classList.remove('show');
-
-            nums.forEach((num) => {
-                num.classList.value = '';
-            });
-
-            nums[0].classList.add('in');
-        }
+        const countdownSound = document.getElementById('countdownSound');
+        const startSound = document.getElementById('startSound');
 
         function runAnimation() {
+            countdownSound.play(); // Start looping countdown sound
+
             nums.forEach((num, idx) => {
                 const nextToLast = nums.length - 1;
 
@@ -189,12 +182,16 @@
         }
 
         function startGame() {
-    alert("Game Started! 🚀");
-    setTimeout(() => {
-        window.location.href = "concept.html";
-    }, 1000); // Redirect after 1 second
-}
+            countdownSound.pause(); // Stop countdown sound
+            countdownSound.currentTime = 0; // Reset the sound
+            startSound.play(); // Play start sound
 
+            setTimeout(() => {
+                window.location.href = "concept.html";
+            }, 1000); // Redirect after 1 second
+        }
+
+        runAnimation();
     </script>
 </body>
 </html>

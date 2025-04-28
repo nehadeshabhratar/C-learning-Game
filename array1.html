@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - C Programming Quiz</title>
+    <link rel="stylesheet" href="L1.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 1 - Quiz 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="quiz-container" id="quiz">
+        <h3 id="question-number" class="question-number">🔹 Question 1/7 🔹</h3>
+        <h2 id="question" class="question"></h2>
+        <p class="timer" id="timer">Time left: 30s</p>
+        <ul id="options-list"></ul>
+        <button id="submit" disabled>Submit</button>
+        <p id="feedback"></p>
+    </div>
+
+<script>
+    const correctSound = new Audio('victory.mp3');
+    const incorrectSound = new Audio('wrong.mp3');
+    const warningSound = new Audio('warning.mpeg');
+    let timer, timeLeft = 30;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+            document.getElementById("username").innerText = username;  // ✅ Display username
+        } else {
+            console.warn("⚠️ No username found, showing Guest");
+            document.getElementById("username").innerText = "Guest";
+        }
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const allQuestions = [
+    { "question": "What is an array in C?", "options": ["A single variable storing multiple values", "A function", "A pointer", "A structure"], "correct": "A single variable storing multiple values" },
+    { "question": "What is the index of the first element in a C array?", "options": ["0", "1", "-1", "Depends on array size"], "correct": "0" },
+    { "question": "Which of the following correctly declares an integer array?", "options": ["int arr[5];", "array int arr[5];", "arr[5] int;", "int arr();"], "correct": "int arr[5];" },
+    { "question": "Which of the following accesses the third element in an array `arr`?", "options": ["arr[3]", "arr(3)", "arr[2]", "arr{3}"], "correct": "arr[2]" },
+    { "question": "Which of the following is the correct syntax for initializing an array?", "options": ["int arr[] = {1,2,3};", "int arr(3) = {1,2,3};", "array arr = {1,2,3};", "int arr = {1,2,3};"], "correct": "int arr[] = {1,2,3};" },
+    { "question": "How many elements does `int arr[10];` have?", "options": ["9", "10", "11", "Depends on initialization"], "correct": "10" },
+    { "question": "What will happen if an array index goes out of bounds?", "options": ["Compiler error", "Runtime error", "Undefined behavior", "Array resizes automatically"], "correct": "Undefined behavior" },
+    { "question": "What is the size of `int arr[5];` on a system where `int` is 4 bytes?", "options": ["5 bytes", "10 bytes", "20 bytes", "Depends on compiler"], "correct": "20 bytes" },
+    { "question": "Which function is used to find the number of elements in an array?", "options": ["sizeof()", "length()", "size()", "count()"], "correct": "sizeof()" },
+    { "question": "Which statement is used to iterate over an array?", "options": ["if", "switch", "loop", "for"], "correct": "for" },
+    { "question": "Which of the following is a valid way to declare a 2D array?", "options": ["int arr[3,3];", "int arr(3)(3);", "int arr[3][3];", "array arr[3,3];"], "correct": "int arr[3][3];" },
+    { "question": "Which of the following correctly initializes a 2D array?", "options": ["int arr[2][2] = {{1,2},{3,4}};", "int arr[2][2] = {1,2,3,4};", "Both A and B", "None"], "correct": "Both A and B" },
+    { "question": "Which operator is used to access elements in an array?", "options": ["*", "&", "[]", "{}"], "correct": "[]" },
+    { "question": "How do you pass an array to a function?", "options": ["By value", "By reference", "By pointer", "By address"], "correct": "By pointer" },
+    { "question": "What is the correct syntax to pass an array to a function?", "options": ["void func(int arr[]);", "void func(int *arr);", "Both A and B", "None"], "correct": "Both A and B" },
+    { "question": "Which of the following is true about arrays?", "options": ["Array elements must be of the same data type", "Array can store different data types", "Array elements are stored randomly", "Array can grow in size automatically"], "correct": "Array elements must be of the same data type" },
+    { "question": "What is the correct way to declare a character array?", "options": ["char arr[10];", "char arr();", "char array[10];", "character arr[10];"], "correct": "char arr[10];" },
+    { "question": "How is a string stored in a character array?", "options": ["With a null terminator '\\0'", "Without any terminator", "With a newline character '\\n'", "With a space"], "correct": "With a null terminator '\\0'" },
+    { "question": "Which of the following is the correct syntax for a string in C?", "options": ["char str[] = 'Hello';", "char str[] = \"Hello\";", "string str = \"Hello\";", "char str = {Hello};"], "correct": "char str[] = \"Hello\";" },
+    { "question": "What happens if a character array does not have a null terminator?", "options": ["It works normally", "It causes a segmentation fault", "It prints garbage values", "None of the above"], "correct": "It prints garbage values" },
+    { "question": "Which function is used to copy one string to another?", "options": ["strcpy()", "copy()", "strcat()", "assign()"], "correct": "strcpy()" },
+    { "question": "Which function is used to concatenate two strings?", "options": ["stradd()", "strconcat()", "strcat()", "append()"], "correct": "strcat()" },
+    { "question": "Which function is used to compare two strings?", "options": ["strcmp()", "strcomp()", "compare()", "stringcmp()"], "correct": "strcmp()" },
+    { "question": "Which function finds the length of a string?", "options": ["strlength()", "strlen()", "size()", "length()"], "correct": "strlen()" },
+    { "question": "Which data type is best suited for an array that stores decimal values?", "options": ["int", "char", "float", "double"], "correct": "float" },
+    { "question": "Which statement about arrays is true?", "options": ["An array name is a pointer to the first element", "Arrays are passed by value", "Arrays store elements of different types", "Arrays can have dynamic sizes"], "correct": "An array name is a pointer to the first element" },
+    { "question": "What is the output of `sizeof(arr)/sizeof(arr[0])`?", "options": ["Size of array in bytes", "Number of elements in the array", "Size of one element", "None of the above"], "correct": "Number of elements in the array" },
+    { "question": "Which of the following is NOT a valid array operation?", "options": ["Accessing an element", "Modifying an element", "Copying arrays with assignment `=`", "Passing an array to a function"], "correct": "Copying arrays with assignment `=`" },
+    { "question": "Which of the following sorts an array in ascending order?", "options": ["sort()", "qsort()", "arrange()", "order()"], "correct": "qsort()" },
+    { "question": "Which type of search is more efficient for sorted arrays?", "options": ["Linear search", "Binary search", "Random search", "Quick search"], "correct": "Binary search" },
+    { "question": "Which of the following is a valid 3D array declaration?", "options": ["int arr[2][3][4];", "int arr[2,3,4];", "array int arr[2][3][4];", "int arr(2,3,4);"], "correct": "int arr[2][3][4];" },
+    { "question": "Which of the following correctly initializes an array with zeroes?", "options": ["int arr[5] = {0};", "int arr[5] = 0;", "int arr[5] = {}; ", "Both A and C"], "correct": "Both A and C" },
+    { "question": "Which of the following functions reverses an array?", "options": ["reverse()", "array_reverse()", "No built-in function", "arr.reverse()"], "correct": "No built-in function" }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+    let quizData = shuffleArray([...allQuestions]).slice(0, 7);
+    let currentQuiz = 0;
+    let score = 0;
+
+    function startTimer() {
+    timeLeft = 30;
+    document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+    
+    let warningSoundPlaying = false; // Track if sound is already playing
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+
+        // Play warning sound repeatedly when time is 10s or less
+        if (timeLeft <= 10 && !warningSoundPlaying) {
+            warningSound.loop = true;  // Enable looping
+            warningSound.play();
+            warningSoundPlaying = true; // Prevent multiple plays
+        }
+
+        // Stop sound when the question changes or time reaches 0
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            warningSound.pause();
+            warningSound.currentTime = 0; // Reset sound
+            autoSubmit(); 
+        }
+
+    }, 1000);
+    }
+
+    function autoSubmit() {
+        clearInterval(timer);
+        document.getElementById("feedback").innerText = "⏳ Time up! ";
+        setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                endQuiz();
+            }
+        }, 2000);
+    }
+
+    function loadQuiz() {
+        clearInterval(timer);
+          warningSound.pause(); // ✅ Stop warning sound
+        warningSound.currentTime = 0; // ✅ Reset sound
+
+        startTimer();
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("submit").disabled = true;
+
+        const currentQuizData = quizData[currentQuiz];
+        document.getElementById("question").innerText = currentQuizData.question;
+        document.getElementById("question-number").innerText = `🔹 Question ${currentQuiz + 1}/7 🔹`;
+
+        shuffleArray(currentQuizData.options).forEach(option => {
+            const li = document.createElement("li");
+            li.innerText = option;
+            li.addEventListener("click", () => {
+                document.querySelectorAll("li").forEach(li =>      li.classList.remove("selected"));
+                li.classList.add("selected");
+                document.getElementById("submit").disabled = false;
+            });
+            document.getElementById("options-list").appendChild(li);
+        });
+    }
+
+   document.getElementById("submit").addEventListener("click", () => {
+    clearInterval(timer);
+    const selected = document.querySelector(".selected");
+    if (!selected) return;
+
+    if (selected.innerText === quizData[currentQuiz].correct) {
+        document.getElementById("feedback").innerText = "✔ Correct!";
+        correctSound.loop = true; // ✅ Keep sound playing
+        correctSound.play();
+        score++;
+    } else {
+        document.getElementById("feedback").innerText = `✖ Incorrect! Correct answer: ${quizData[currentQuiz].correct}`;
+        incorrectSound.loop = true; // ✅ Keep sound playing
+        incorrectSound.play();
+    }
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        correctSound.pause(); 
+        incorrectSound.pause(); 
+        correctSound.currentTime = 0; 
+        incorrectSound.currentTime = 0; 
+        correctSound.loop = false;  
+        incorrectSound.loop = false;  
+
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            endQuiz();
+        }
+    }, 2000);
+});
+    function submitScore(finalScore) {
+    const email = localStorage.getItem("email"); 
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+
+    // Store Level 1 score in localStorage for Level 2
+    localStorage.setItem("totalScore", finalScore); // Store total score for Level 2
+
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 7, level1_score: finalScore }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+   function endQuiz() {
+    // Store Level 1 score in localStorage
+    localStorage.setItem("level1_score", score);
+
+    // Submit score to the server
+    submitScore(score);
+
+    // Display final score
+    document.getElementById("quiz").innerHTML = `<h2>🎉 Your Score: ${score}/7</h2>`;
+
+    // Redirect based on score
+   setTimeout(() => {
+    if (score < 5) {
+        localStorage.setItem("nextPage", "concept.html");  // ✅ Store allowed page
+        window.location.href = "concept.html";  
+    } else {
+        localStorage.setItem("nextPage", "array2.html");  // ✅ Store allowed page
+        window.location.href = "array2.html";  
+    }
+}, 3000);
+
+}
+
+    loadQuiz();
+</script>
+</body>
+</html>

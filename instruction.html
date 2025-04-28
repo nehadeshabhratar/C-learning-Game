@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Play - C Learning Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(120deg, #001f3f, #000814);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        .background-anim {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.1));
+            animation: animateBG 6s infinite alternate;
+            z-index: -2;  /* Lowered to prevent interference */
+        }
+
+        @keyframes animateBG {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .card {
+            width: 60%;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+            position: relative; /* Ensure it's above the background */
+            z-index: 1;
+        }
+
+        .card:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+        }
+
+        h1 {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        ul {
+            text-align: left;
+            padding: 10px;
+            list-style-type: none;
+        }
+
+        ul li {
+            margin: 10px 0;
+            font-size: 18px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+            color: #ff00ff;
+        }
+
+        .next-btn {
+            display: block; /* Full clickable width */
+            margin: 20px auto;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: white;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.8);
+            animation: glow 1.5s infinite alternate;
+            position: relative;
+            z-index: 5; /* Ensures button is always clickable */
+            width: 50%; /* Ensures more clickable area */
+            text-align: center;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.1) rotateY(5deg);
+            box-shadow: 0 0 25px rgba(255, 0, 255, 1), 0 0 40px rgba(0, 255, 255, 1);
+        }
+
+        .next-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes glow {
+            0% {
+                box-shadow: 0 0 15px rgba(255, 0, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(255, 0, 255, 1), 0 0 40px rgba(0, 255, 255, 1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-anim"></div>
+
+    <div class="card">
+        <h1>How to Play the C Learning Game</h1>
+        <p>🚀 Follow these steps to start playing:</p>
+        <ul>
+            <li>📌 <b>Login</b> with valid credentials.</li>
+            <li>📌 If not registered, sign up first.</li>
+            <li>📌 Click <b>Start</b> to begin. A countdown will appear.</li>
+            <li>📌 Learn C concepts step by step.</li>
+           
+
+            <li>📌 Click the concept name to open notes 📖, and the arrow to start levels 🎯.</li>  
+       </ul>
+
+        <h2>Game Levels 🎯</h2>
+        <ul>
+            <li>🔹 <b>Level 1 (MCQ):</b> Solve 7 questions (1 mark & 30s to solve each). Score 5+ to advance.</li>
+            <li>🔹 <b>Level 2 (Pseudocode):</b> Fix 4 incorrect codes (2 marks each). 3 attempts per question.</li>
+            <li>🔹 <b>Level 3 (Coding):</b> Solve 1 coding problem (5 marks). 3 attempts per question.</li>
+        </ul>
+
+        <p>🏆 Your score updates as you progress. Keep improving!</p>
+        <p>💡 Feedback is welcome for improvements.</p>
+
+        <button class="next-btn" onclick="goToNext()">Next</button>
+    </div>
+
+    <script>
+       function goToNext() {
+           window.location.href = "option.html"; // Ensure this file exists
+       }
+    </script>
+
+</body>
+</html>

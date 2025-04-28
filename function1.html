@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - C Programming Quiz</title>
+    <link rel="stylesheet" href="L1.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 1 - Quiz 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="quiz-container" id="quiz">
+        <h3 id="question-number" class="question-number">🔹 Question 1/7 🔹</h3>
+        <h2 id="question" class="question"></h2>
+        <p class="timer" id="timer">Time left: 30s</p>
+        <ul id="options-list"></ul>
+        <button id="submit" disabled>Submit</button>
+        <p id="feedback"></p>
+    </div>
+
+<script>
+    const correctSound = new Audio('victory.mp3');
+    const incorrectSound = new Audio('wrong.mp3');
+    const warningSound = new Audio('warning.mpeg');
+    let timer, timeLeft = 30;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+            document.getElementById("username").innerText = username;  // ✅ Display username
+        } else {
+            console.warn("⚠️ No username found, showing Guest");
+            document.getElementById("username").innerText = "Guest";
+        }
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const allQuestions = [
+    { "question": "Which keyword is used to define a function in C?", "options": ["func", "define", "void", "None of the above"], "correct": "None of the above" },
+    { "question": "What is the return type of `main()` function in C?", "options": ["void", "char", "int", "float"], "correct": "int" },
+    { "question": "Which of the following is a correct function prototype?", "options": ["int add(int, int);", "add(int, int);", "int add();", "None of the above"], "correct": "int add(int, int);" },
+    { "question": "What is a function in C?", "options": ["A block of statements", "A loop", "A variable", "A pointer"], "correct": "A block of statements" },
+    { "question": "Which of the following functions does not require an explicit return statement?", "options": ["void", "int", "float", "char"], "correct": "void" },
+    { "question": "Which function is used to return a value in C?", "options": ["return", "output", "exit", "printf"], "correct": "return" },
+    { "question": "What is the correct syntax to call a function?", "options": ["function_name;", "function_name();", "call function_name();", "function_name[];"], "correct": "function_name();" },
+    { "question": "Which of the following is a valid function declaration?", "options": ["int func();", "func int();", "declare func();", "function func();"], "correct": "int func();" },
+    { "question": "Which function is called automatically when a C program starts execution?", "options": ["start()", "init()", "execute()", "main()"], "correct": "main()" },
+    { "question": "How many times can a function be called in a program?", "options": ["Once", "Twice", "Depends on the function", "Any number of times"], "correct": "Any number of times" },
+    { "question": "Which keyword is used to pass a variable by reference?", "options": ["pointer", "*", "&", "C does not support pass by reference"], "correct": "C does not support pass by reference" },
+    { "question": "Which of the following is true about function arguments in C?", "options": ["Functions must have arguments", "Functions can have zero or more arguments", "Functions must return values", "Functions cannot have more than two arguments"], "correct": "Functions can have zero or more arguments" },
+    { "question": "What is a recursive function?", "options": ["A function that calls itself", "A function that repeats a loop", "A function that has multiple return values", "A function that has no arguments"], "correct": "A function that calls itself" },
+    { "question": "What is the default return type of a function if none is specified?", "options": ["int", "void", "char", "float"], "correct": "int" },
+    { "question": "Which of the following functions is used to dynamically allocate memory?", "options": ["malloc()", "alloc()", "create()", "new()"], "correct": "malloc()" },
+    { "question": "What is the purpose of a function prototype?", "options": ["To define a function", "To declare a function before its use", "To execute a function", "To allocate memory for a function"], "correct": "To declare a function before its use" },
+    { "question": "Which of the following is true about functions?", "options": ["Every function must return a value", "A function can return only integers", "Functions can return multiple values", "A function can return a single value"], "correct": "A function can return a single value" },
+    { "question": "Which of the following is a correct function definition?", "options": ["int sum(int a, int b) { return a + b; }", "sum(int a, int b) { return a + b; }", "int sum(a, b) { return a + b; }", "int sum() { return a + b; }"], "correct": "int sum(int a, int b) { return a + b; }" },
+    { "question": "Which function is used to terminate a program?", "options": ["exit()", "return()", "terminate()", "end()"], "correct": "exit()" },
+    { "question": "Which of the following is a valid function header?", "options": ["function add(int a, int b)", "add(int a, int b)", "int add(int a, int b)", "define add(int a, int b)"], "correct": "int add(int a, int b)" },
+    { "question": "Which of the following is used to pass an array to a function?", "options": ["By value", "By reference", "By pointer", "By structure"], "correct": "By pointer" },
+    { "question": "Which type of function does not return any value?", "options": ["void", "int", "float", "char"], "correct": "void" },
+    { "question": "What will happen if a function does not have a return type?", "options": ["It will return garbage value", "It will return 0", "It will return NULL", "It will cause a compilation error"], "correct": "It will cause a compilation error" },
+    { "question": "What is the main advantage of using functions in C?", "options": ["Code reusability", "Faster execution", "Increased memory", "None of the above"], "correct": "Code reusability" },
+    { "question": "Which of the following functions takes input from the user?", "options": ["printf()", "scanf()", "print()", "input()"], "correct": "scanf()" },
+    { "question": "What is the correct way to declare a function that does not take any parameters?", "options": ["void func();", "void func(void);", "int func(void);", "All of the above"], "correct": "All of the above" },
+    { "question": "Which of the following functions is used to copy a string?", "options": ["copy()", "strcpy()", "strcopy()", "copystr()"], "correct": "strcpy()" },
+    { "question": "Which of the following functions is used to find the length of a string?", "options": ["strlen()", "size()", "len()", "length()"], "correct": "strlen()" },
+    { "question": "What is the difference between `void function()` and `int function()`?", "options": ["void function() returns a value", "int function() does not return a value", "void function() does not return a value, int function() returns an integer", "No difference"], "correct": "void function() does not return a value, int function() returns an integer" },
+    { "question": "How do you pass multiple parameters to a function?", "options": ["Using an array", "Using a structure", "Separating with commas", "All of the above"], "correct": "All of the above" },
+    { "question": "What will happen if a function is called with incorrect argument types?", "options": ["Compilation error", "Runtime error", "Unexpected output", "Nothing"], "correct": "Compilation error" },
+    { "question": "Which function is used to compare two strings?", "options": ["strcmp()", "strcomp()", "compare()", "comp()"], "correct": "strcmp()" },
+    { "question": "Which of the following is NOT a valid function name?", "options": ["func_1", "_func", "1func", "func1"], "correct": "1func" },
+    { "question": "Which function is used to concatenate two strings?", "options": ["strcat()", "append()", "concat()", "strcombine()"], "correct": "strcat()" }
+];
+ let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+    let quizData = shuffleArray([...allQuestions]).slice(0, 7);
+    let currentQuiz = 0;
+    let score = 0;
+
+    function startTimer() {
+    timeLeft = 30;
+    document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+    
+    let warningSoundPlaying = false; // Track if sound is already playing
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+
+        // Play warning sound repeatedly when time is 10s or less
+        if (timeLeft <= 10 && !warningSoundPlaying) {
+            warningSound.loop = true;  // Enable looping
+            warningSound.play();
+            warningSoundPlaying = true; // Prevent multiple plays
+        }
+
+        // Stop sound when the question changes or time reaches 0
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            warningSound.pause();
+            warningSound.currentTime = 0; // Reset sound
+            autoSubmit(); 
+        }
+
+    }, 1000);
+    }
+
+    function autoSubmit() {
+        clearInterval(timer);
+        document.getElementById("feedback").innerText = "⏳ Time up! ";
+        setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                endQuiz();
+            }
+        }, 2000);
+    }
+
+    function loadQuiz() {
+        clearInterval(timer);
+          warningSound.pause(); // ✅ Stop warning sound
+        warningSound.currentTime = 0; // ✅ Reset sound
+
+        startTimer();
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("submit").disabled = true;
+
+        const currentQuizData = quizData[currentQuiz];
+        document.getElementById("question").innerText = currentQuizData.question;
+        document.getElementById("question-number").innerText = `🔹 Question ${currentQuiz + 1}/7 🔹`;
+
+        shuffleArray(currentQuizData.options).forEach(option => {
+            const li = document.createElement("li");
+            li.innerText = option;
+            li.addEventListener("click", () => {
+                document.querySelectorAll("li").forEach(li =>      li.classList.remove("selected"));
+                li.classList.add("selected");
+                document.getElementById("submit").disabled = false;
+            });
+            document.getElementById("options-list").appendChild(li);
+        });
+    }
+
+   document.getElementById("submit").addEventListener("click", () => {
+    clearInterval(timer);
+    const selected = document.querySelector(".selected");
+    if (!selected) return;
+
+    if (selected.innerText === quizData[currentQuiz].correct) {
+        document.getElementById("feedback").innerText = "✔ Correct!";
+        correctSound.loop = true; // ✅ Keep sound playing
+        correctSound.play();
+        score++;
+    } else {
+        document.getElementById("feedback").innerText = `✖ Incorrect! Correct answer: ${quizData[currentQuiz].correct}`;
+        incorrectSound.loop = true; // ✅ Keep sound playing
+        incorrectSound.play();
+    }
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        correctSound.pause(); 
+        incorrectSound.pause(); 
+        correctSound.currentTime = 0; 
+        incorrectSound.currentTime = 0; 
+        correctSound.loop = false;  
+        incorrectSound.loop = false;  
+
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            endQuiz();
+        }
+    }, 2000);
+});
+    function submitScore(finalScore) {
+    const email = localStorage.getItem("email"); 
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+
+    // Store Level 1 score in localStorage for Level 2
+    localStorage.setItem("totalScore", finalScore); // Store total score for Level 2
+
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 6, level1_score: finalScore }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+   function endQuiz() {
+    // Store Level 1 score in localStorage
+    localStorage.setItem("level1_score", score);
+
+    // Submit score to the server
+    submitScore(score);
+
+    // Display final score
+    document.getElementById("quiz").innerHTML = `<h2>🎉 Your Score: ${score}/7</h2>`;
+
+    // Redirect based on score
+   setTimeout(() => {
+    if (score < 5) {
+        localStorage.setItem("nextPage", "concept.html");  // ✅ Store allowed page
+        window.location.href = "concept.html";  
+    } else {
+        localStorage.setItem("nextPage", "function2.html");  // ✅ Store allowed page
+        window.location.href = "function2.html";  
+    }
+}, 3000);
+
+}
+
+    loadQuiz();
+</script>
+</body>
+</html>

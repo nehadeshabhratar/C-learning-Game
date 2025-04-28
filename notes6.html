@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functions in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>🔧 Functions in C</h1>
+
+<div class="container">
+    <h2>📌 What are Functions?</h2>
+    <p>A function in C is a block of code that performs a specific task. It helps in reducing redundancy, improving code readability, and making debugging easier.</p>
+
+    <h2>🔹 Types of Functions in C</h2>
+    
+    <h3>📌 1. Built-in (Library) Functions</h3>
+    <p>C provides several predefined functions, such as:</p>
+    <ul>
+        <li><span class="keyword">printf()</span> - Prints output.</li>
+        <li><span class="keyword">scanf()</span> - Reads input.</li>
+        <li><span class="keyword">strlen()</span> - Finds the length of a string.</li>
+        <li><span class="keyword">sqrt()</span> - Calculates the square root.</li>
+    </ul>
+
+    <h3>📌 2. User-defined Functions</h3>
+    <p>A user-defined function is created by the programmer to perform specific tasks.</p>
+    <pre>
+returnType functionName(parameters) {
+    // Function body
+}
+    </pre>
+
+    <h2>🔹 Function Declaration, Definition, and Call</h2>
+
+    <h3>📌 1. Function Declaration</h3>
+    <p>The function must be declared before calling it.</p>
+    <pre>
+void greet();  // Function prototype
+    </pre>
+
+    <h3>📌 2. Function Definition</h3>
+    <p>The actual implementation of the function.</p>
+    <pre>
+void greet() {
+    printf("Hello, User!");
+}
+    </pre>
+
+    <h3>📌 3. Function Call</h3>
+    <p>The function is called from the main program.</p>
+    <pre>
+int main() {
+    greet();  // Function call
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Function with Parameters and Return Values</h2>
+    
+    <h3>📌 Function with Parameters</h3>
+    <pre>
+#include <stdio.h>
+void sum(int a, int b) {
+    printf("Sum: %d", a + b);
+}
+
+int main() {
+    sum(5, 10);
+    return 0;
+}
+    </pre>
+
+    <h3>📌 Function with Return Value</h3>
+    <pre>
+#include <stdio.h>
+int multiply(int x, int y) {
+    return x * y;
+}
+
+int main() {
+    int result = multiply(4, 5);
+    printf("Multiplication: %d", result);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Recursive Functions</h2>
+    <p>A function that calls itself is called a recursive function.</p>
+    <pre>
+#include <stdio.h>
+int factorial(int n) {
+    if (n == 0)
+        return 1;
+    return n * factorial(n - 1);
+}
+
+int main() {
+    printf("Factorial: %d", factorial(5));
+    return 0;
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

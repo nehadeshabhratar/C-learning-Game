@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Handling in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>📂 File Handling in C</h1>
+
+<div class="container">
+    <h2>🔹 What is File Handling?</h2>
+    <p>File handling in C allows us to **store, retrieve, and manipulate data** in a file on the disk. It is useful for **permanent data storage** instead of temporary memory (RAM).</p>
+
+    <h2>🔹 Types of File Handling in C</h2>
+    <ul>
+        <li>📄 **Text Files** - Stores data in human-readable format.</li>
+        <li>💾 **Binary Files** - Stores data in binary format for efficient storage and retrieval.</li>
+    </ul>
+
+    <h2>🔹 File Operations in C</h2>
+    <p>C provides various functions to work with files:</p>
+    <ul>
+        <li><span class="keyword">fopen()</span> - Opens a file.</li>
+        <li><span class="keyword">fclose()</span> - Closes a file.</li>
+        <li><span class="keyword">fprintf()</span> - Writes formatted data to a file.</li>
+        <li><span class="keyword">fscanf()</span> - Reads formatted data from a file.</li>
+        <li><span class="keyword">fputc(), fputs()</span> - Writes character/string to a file.</li>
+        <li><span class="keyword">fgetc(), fgets()</span> - Reads character/string from a file.</li>
+        <li><span class="keyword">fseek(), ftell(), rewind()</span> - Used for file navigation.</li>
+    </ul>
+
+    <h2>🔹 Opening and Closing a File</h2>
+    <p>We use the **fopen()** function to open a file and **fclose()** to close it.</p>
+    <pre>
+#include &lt;stdio.h&gt;
+
+int main() {
+    FILE *file = fopen("example.txt", "w");  // Open file in write mode
+    if (file == NULL) {
+        printf("File could not be opened");
+        return 1;
+    }
+    fprintf(file, "Hello, C File Handling!"); // Write to file
+    fclose(file);  // Close the file
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 File Opening Modes</h2>
+    <table border="1">
+        <tr>
+            <th>Mode</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><b>"r"</b></td>
+            <td>Opens a file for reading. The file must exist.</td>
+        </tr>
+        <tr>
+            <td><b>"w"</b></td>
+            <td>Opens a file for writing. Creates a new file if it does not exist, or erases content if it does.</td>
+        </tr>
+        <tr>
+            <td><b>"a"</b></td>
+            <td>Opens a file for appending. Creates a new file if it does not exist.</td>
+        </tr>
+        <tr>
+            <td><b>"r+"</b></td>
+            <td>Opens a file for reading and writing.</td>
+        </tr>
+        <tr>
+            <td><b>"w+"</b></td>
+            <td>Opens a file for reading and writing. Overwrites existing content.</td>
+        </tr>
+        <tr>
+            <td><b>"a+"</b></td>
+            <td>Opens a file for reading and appending.</td>
+        </tr>
+    </table>
+
+    <h2>🔹 Writing to a File</h2>
+    <p>We can use **fprintf()**, **fputc()**, or **fputs()** to write data into a file.</p>
+    <pre>
+#include &lt;stdio.h&gt;
+
+int main() {
+    FILE *file = fopen("data.txt", "w");
+    fprintf(file, "Hello, World!");  // Write string to file
+    fputc('A', file);  // Write character to file
+    fputs("\nLearning File Handling in C!", file);
+    fclose(file);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Reading from a File</h2>
+    <p>We use **fscanf()**, **fgetc()**, or **fgets()** to read data from a file.</p>
+    <pre>
+#include &lt;stdio.h&gt;
+
+int main() {
+    FILE *file = fopen("data.txt", "r");
+    char str[100];
+    if (file == NULL) {
+        printf("File does not exist!");
+        return 1;
+    }
+    fgets(str, 100, file);  // Read string from file
+    printf("File content: %s", str);
+    fclose(file);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 File Navigation</h2>
+    <ul>
+        <li><b>fseek(file, offset, position)</b> - Moves file pointer to a specific location.</li>
+        <li><b>ftell(file)</b> - Returns current position of file pointer.</li>
+        <li><b>rewind(file)</b> - Moves file pointer to the beginning.</li>
+    </ul>
+
+    <pre>
+#include &lt;stdio.h&gt;
+
+int main() {
+    FILE *file = fopen("data.txt", "r");
+    fseek(file, 5, SEEK_SET);  // Move pointer 5 bytes from start
+    printf("Current Position: %ld", ftell(file));
+    rewind(file);  // Move pointer back to start
+    fclose(file);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Working with Binary Files</h2>
+    <p>Binary files store data in a format not readable by humans. We use **fwrite()** and **fread()** functions.</p>
+    <pre>
+#include &lt;stdio.h&gt;
+
+struct Student {
+    char name[20];
+    int age;
+};
+
+int main() {
+    struct Student s1 = {"John", 21};
+    FILE *file = fopen("student.dat", "wb");
+    fwrite(&s1, sizeof(struct Student), 1, file);
+    fclose(file);
+    return 0;
+}
+    </pre>
+
+    <h2>🔹 Reading from a Binary File</h2>
+    <pre>
+#include &lt;stdio.h&gt;
+
+struct Student {
+    char name[20];
+    int age;
+};
+
+int main() {
+    struct Student s2;
+    FILE *file = fopen("student.dat", "rb");
+    fread(&s2, sizeof(struct Student), 1, file);
+    printf("Name: %s, Age: %d", s2.name, s2.age);
+    fclose(file);
+    return 0;
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Source+Code+Pro:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle, #000428, #004e92);
+    color: white;
+    text-align: center;
+    padding-top: 80px;
+    overflow: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #6a00ff, #ff00ff, #00ffff);
+    padding: 15px 30px;
+    box-shadow: 0 0 20px cyan;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-center {
+    font-size: 28px;
+    font-weight: bold;
+    color: #00ffff;
+    text-shadow: 0 0 15px #ff00ff;
+}
+
+.user-info, .score {
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 10px cyan;
+}
+
+.user-info {
+    color: #ffcc00;
+}
+
+.score {
+    color: #ffcc00;
+}
+.container {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.question-box {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px cyan;
+    width: 60%;
+    font-size: 1.2rem;
+    color: white;
+    margin: auto;
+    text-align: left;
+    font-family: 'Source Code Pro', monospace;
+    border: 2px solid cyan;
+    height: 100px;
+    overflow-y: auto;
+}
+
+.attempts {
+    color: yellow;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+textarea {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px cyan;
+    width: 55%;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: white;
+    overflow-x: auto;
+    font-family: 'Source Code Pro', monospace;
+    border: 1px solid cyan;
+    resize: vertical;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.submit-btn {
+    background: linear-gradient(90deg, #00ffff, #ff00ff);
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 0 20px #00ffff;
+    transition: all 0.3s ease-in-out;
+    margin-top: 15px;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(90deg, #ff00ff, #00ffff);
+    box-shadow: 0 0 30px #ff00ff;
+    transform: scale(1.1);
+    color: white;
+}
+.hidden { display: none; }
+        #dialog-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            box-shadow: 0 0 20px cyan;
+            text-align: center;
+            border-radius: 10px;
+        }
+textarea#user-input {
+    width: 60%;
+    height: 400px;
+    resize: both;  /* Allows user to adjust both width and height */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px cyan;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: white;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid cyan;
+    font-family: 'Source Code Pro', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+       body {
+    background: radial-gradient(circle, #000428, #004e92);
+    color: white;
+    overflow: hidden;
+}
+
+/* Fullscreen Dialog Box */
+#dialog-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Show the dialog box */
+#dialog-box.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Text inside dialog */
+#dialog-box p {
+    font-size: 28px;
+    color: #00ffff;
+    text-shadow: 0 0 15px #ff00ff;
+}
+
+/* Button */
+#dialog-box button {
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 22px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff00ff, #00ffff);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+#dialog-box button:hover {
+    background: linear-gradient(90deg, #00ffff, #ff00ff);
+    box-shadow: 0 0 30px cyan;
+    transform: scale(1.1);
+}

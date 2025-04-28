@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 2 - PSEUDOCODE 🚀</title>
+    <link rel="stylesheet" href="level2.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 2 - PSEUDOCODE 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <h3 class="instructions">Fix the errors in the pseudocode below.</h3>
+        <div class="progress">Pseudocode <span id="serial-number">1</span> of 4 </div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        
+        <textarea id="incorrect-code" readonly></textarea>  
+        <textarea id="user-input" placeholder="Enter your corrected pseudocode here..."></textarea><br>
+
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;  
+            document.getElementById("score").innerText = totalScore; // Show total score
+
+            let currentScore = totalScore; // Start Level 2 with previous score
+
+            function updateScore(points) {
+                currentScore += points; // Increase score
+                document.getElementById("score").innerText = currentScore;
+                localStorage.setItem("totalScore", currentScore); // Update stored score
+            }
+
+            let username = localStorage.getItem("username") || "Guest";
+            document.getElementById("username").innerText = username;
+
+            let level1Score = parseInt(localStorage.getItem("level1_score")) || 0;
+            let level2Score = totalScore; 
+
+            let userScore = level2Score; 
+            let correctSound = document.getElementById("correctSound");
+            let incorrectSound = document.getElementById("incorrectSound");
+
+            let selectedPseudocodes = [];
+            let currentIndex = 0;
+            let attempts = 3;
+
+ const pseudocodes = [
+    { "pseudo": "int main() {\n  int x;\n  x = \"10\";\n  printf(\"%d\", x);\n}", "correct": "int main() {\n  int x = 10;\n  printf(\"%d\", x);\n}" },
+    { "pseudo": "int main() {\n  float pi = 3.14;\n  printf(\"%d\", pi);\n}", "correct": "int main() {\n  float pi = 3.14;\n  printf(\"%f\", pi);\n}" },
+    { "pseudo": "int main() {\n  char letter = 'Hello';\n  printf(\"%c\", letter);\n}", "correct": "int main() {\n  char letter = 'H';\n  printf(\"%c\", letter);\n}" },
+    { "pseudo": "int main() {\n  double num = 5.678;\n  printf(\"%d\", num);\n}", "correct": "int main() {\n  double num = 5.678;\n  printf(\"%lf\", num);\n}" },
+    { "pseudo": "int main() {\n  long bigNum = 1234567890;\n  printf(\"%d\", bigNum);\n}", "correct": "int main() {\n  long bigNum = 1234567890;\n  printf(\"%ld\", bigNum);\n}" },
+    { "pseudo": "int main() {\n  unsigned int x = -5;\n  printf(\"%u\", x);\n}", "correct": "int main() {\n  unsigned int x = 5;\n  printf(\"%u\", x);\n}" },
+    { "pseudo": "int main() {\n  bool flag = 1;\n  printf(\"%d\", flag);\n}", "correct": "#include <stdbool.h>\nint main() {\n  bool flag = true;\n  printf(\"%d\", flag);\n}" },
+    { "pseudo": "int main() {\n  int arr[3] = {1,2,3,4};\n  printf(\"%d\", arr[3]);\n}", "correct": "int main() {\n  int arr[3] = {1,2,3};\n  printf(\"%d\", arr[2]);\n}" },
+    { "pseudo": "int main() {\n  int *ptr;\n  printf(\"%d\", *ptr);\n}", "correct": "int main() {\n  int x = 10;\n  int *ptr = &x;\n  printf(\"%d\", *ptr);\n}" },
+    { "pseudo": "int main() {\n  struct Point {\n    int x;\n    int y;\n  };\n  Point p;\n  p.x = 5;\n  printf(\"%d\", p.x);\n}", "correct": "int main() {\n  struct Point {\n    int x;\n    int y;\n  };\n  struct Point p;\n  p.x = 5;\n  printf(\"%d\", p.x);\n}" },
+    { "pseudo": "int main() {\n  char str[10];\n  gets(str);\n}", "correct": "int main() {\n  char str[10];\n  fgets(str, sizeof(str), stdin);\n}" },
+    { "pseudo": "int main() {\n  void num = 10;\n  printf(\"%d\", num);\n}", "correct": "int main() {\n  int num = 10;\n  printf(\"%d\", num);\n}" },
+    { "pseudo": "int main() {\n  float x = 2.5;\n  printf(\"%d\", x);\n}", "correct": "int main() {\n  float x = 2.5;\n  printf(\"%f\", x);\n}" },
+    { "pseudo": "int main() {\n  short num = 100000;\n  printf(\"%d\", num);\n}", "correct": "int main() {\n  short num = 100;\n  printf(\"%hd\", num);\n}" },
+    { "pseudo": "int main() {\n  int a, b;\n  printf(\"%d\", a + b);\n}", "correct": "int main() {\n  int a = 5, b = 10;\n  printf(\"%d\", a + b);\n}" },
+    { "pseudo": "int main() {\n  int x;\n  scanf(\"%d\", x);\n}", "correct": "int main() {\n  int x;\n  scanf(\"%d\", &x);\n}" },
+    { "pseudo": "int main() {\n  enum Colors {RED, GREEN, BLUE};\n  Colors c = RED;\n  printf(\"%d\", c);\n}", "correct": "int main() {\n  enum Colors {RED, GREEN, BLUE};\n  enum Colors c = RED;\n  printf(\"%d\", c);\n}" },
+    { "pseudo": "int main() {\n  const pi = 3.14;\n  printf(\"%f\", pi);\n}", "correct": "int main() {\n  const float pi = 3.14;\n  printf(\"%f\", pi);\n}" },
+    { "pseudo": "int main() {\n  long long bigNum = 123456789012345;\n  printf(\"%d\", bigNum);\n}", "correct": "int main() {\n  long long bigNum = 123456789012345;\n  printf(\"%lld\", bigNum);\n}" },
+    { "pseudo": "int main() {\n  double num = 123.456;\n  printf(\"%.3d\", num);\n}", "correct": "int main() {\n  double num = 123.456;\n  printf(\"%.3lf\", num);\n}" },
+    { "pseudo": "int main() {\n  char name[20] = \"Alice\";\n  printf(\"%c\", name);\n}", "correct": "int main() {\n  char name[20] = \"Alice\";\n  printf(\"%s\", name);\n}" },
+    { "pseudo": "int main() {\n  int x;\n  x = 10.5;\n  printf(\"%d\", x);\n}", "correct": "int main() {\n  float x = 10.5;\n  printf(\"%f\", x);\n}" },
+    { "pseudo": "int main() {\n  char ch = \"A\";\n  printf(\"%c\", ch);\n}", "correct": "int main() {\n  char ch = 'A';\n  printf(\"%c\", ch);\n}" },
+    { "pseudo": "int main() {\n  signed int x = 10;\n  printf(\"%u\", x);\n}", "correct": "int main() {\n  signed int x = 10;\n  printf(\"%d\", x);\n}" },
+    { "pseudo": "int main() {\n  double x = 3.14;\n  printf(\"%f\", x);\n}", "correct": "int main() {\n  double x = 3.14;\n  printf(\"%lf\", x);\n}" },
+    { "pseudo": "int main() {\n  float a = 5, b = 2;\n  printf(\"%f\", a / b);\n}", "correct": "int main() {\n  float a = 5.0, b = 2.0;\n  printf(\"%f\", a / b);\n}" },
+    { "pseudo": "int main() {\n  struct Student {\n    char name[20];\n    int age;\n  };\n  Student s1 = {\"John\", 20};\n}", "correct": "int main() {\n  struct Student {\n    char name[20];\n    int age;\n  };\n  struct Student s1 = {\"John\", 20};\n  return 0;\n}" }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+
+
+            function initializePseudocodes() {
+                let shuffled = pseudocodes.sort(() => 0.5 - Math.random());
+                selectedPseudocodes = shuffled.slice(0, 4);
+                displayPseudocode();
+            }
+
+            function displayPseudocode() {
+                document.getElementById("incorrect-code").value = selectedPseudocodes[currentIndex].pseudo;
+                document.getElementById("serial-number").innerText = currentIndex + 1;
+                document.getElementById("user-input").value = "";
+            }
+
+            window.checkAnswer = function () {
+                let userInput = document.getElementById("user-input").value.trim();
+
+                if (userInput === selectedPseudocodes[currentIndex].correct) {
+                    correctSound.play();
+                    updateScore(2);
+                    currentIndex++;
+                    attempts = 3; 
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (currentIndex < 4) {
+                        displayPseudocode();
+                    } else {
+                        submitScore(currentScore);
+                        setTimeout(() => {
+                            window.location.href = "data3.html";
+                        }, 2000);
+                    }
+                } else {
+                    incorrectSound.play();
+                    attempts--;
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (attempts === 0) {
+                        window.location.href = "concept.html";
+                    }
+                }
+            }
+
+            function submitScore(finalScore) {
+                const email = localStorage.getItem("email");
+                if (!email) {
+                    alert("❌ Email not found! Please log in again.");
+                    return;
+                }
+                
+                fetch("http://localhost:3000/submit-score", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, concept_id: 2, level2_score: finalScore })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Server Response:", data);
+                    alert("Score saved successfully!");
+                })
+                .catch(error => {
+                    console.error("❌ Error submitting score:", error);
+                });
+            }
+
+            initializePseudocodes();
+        });
+    </script>
+</body>
+</html>

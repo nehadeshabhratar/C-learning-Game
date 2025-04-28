@@ -3,168 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pseudo Code Fixing - C Programming</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            color: white;
-            padding: 50px;
-            overflow: hidden;
-            perspective: 1000px;
-        }
-        
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
-            display: inline-block;
-            width: 60%;
-            transform: rotateY(0deg);
-            transition: transform 0.5s ease-in-out, box-shadow 0.5s;
-            position: relative;
-        }
-
-        .container:hover {
-            transform: rotateY(5deg) scale(1.05);
-            box-shadow: 0px 10px 40px rgba(0, 255, 255, 0.5);
-        }
-
-        .level {
-            font-size: 28px;
-            font-weight: bold;
-            color: lime;
-            text-shadow: 0px 0px 15px lime;
-            margin-bottom: 10px;
-            animation: glow 1.5s infinite alternate;
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0px 0px 10px lime; }
-            100% { text-shadow: 0px 0px 20px lime; }
-        }
-
-        h2 {
-            font-size: 24px;
-            color: cyan;
-            text-shadow: 0px 0px 10px cyan;
-        }
-
-        pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 18px;
-            box-shadow: 0px 0px 20px cyan;
-            transition: transform 0.3s;
-        }
-
-        pre:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 0px 30px cyan;
-        }
-
-        textarea {
-    width: 100%;
-    height: 150px;  /* Increased height */
-    font-size: 18px;
-    border-radius: 10px;
-    border: none;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    resize: none; /* Prevent resizing */
-    transition: box-shadow 0.3s, transform 0.3s;
-}
-
-textarea:focus {
-    outline: none;
-    box-shadow: 0px 0px 20px cyan;
-    transform: scale(1.02);
-}
-
-
-        button {
-            margin-top: 10px;
-            padding: 12px 25px;
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
-            color: white;
-            border: none;
-            font-size: 18px;
-            border-radius: 10px;
-            cursor: pointer;
-            box-shadow: 0px 5px 20px rgba(255, 0, 255, 0.5);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        button:hover {
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            transform: scale(1.1);
-            box-shadow: 0px 5px 30px rgba(0, 255, 255, 0.8);
-        }
-
-        button:active {
-            transform: scale(0.9);
-            box-shadow: 0px 2px 10px rgba(255, 0, 255, 0.5);
-        }
-    </style>
+    <title>🚀 LEVEL 2 - PSEUDOCODE 🚀</title>
+    <link rel="stylesheet" href="level2.css">
 </head>
 <body>
-    <div class="container">
-        <div class="level">🚀 Level 2 🚀</div>
-        <h2>Fix the Error in the Code</h2>
-        <pre id="pseudo-code"></pre>
-        <textarea id="user-code" placeholder="Fix the code here..."></textarea>
-        <button onclick="checkAnswer()">Submit</button>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 2 - PSEUDOCODE 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
     </div>
-    
+
+    <div class="container">
+        <h3 class="instructions">Fix the errors in the pseudocode below.</h3>
+        <div class="progress">Pseudocode <span id="serial-number">1</span> of 4 </div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        
+        <textarea id="incorrect-code" readonly></textarea>  
+        <textarea id="user-input" placeholder="Enter your corrected pseudocode here..."></textarea><br>
+
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
     <script>
-        const pseudoCodes = [
-            {
-                question: "Fix this C code:",
-                code: "#include <stdio.h>\nvoid main()\n{\n    printf(\"Hello World\");\n}",
-                correct: "#include <stdio.h>\nint main()\n{\n    printf(\"Hello World\");\n    return 0;\n}"
-            },
-            {
-                question: "Fix this second C code:",
-                code: "#include <stdio.h>\nint main()\n{\n    char d = 10;\n    printf(\"The value is: %d\", d);\n    return 0;\n}",
-                correct: "#include <stdio.h>\nint main()\n{\n    int d = 10;\n    printf(\"The value is: %d\", d);\n    return 0;\n}"
+        document.addEventListener("DOMContentLoaded", () => {
+            let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;  
+            document.getElementById("score").innerText = totalScore; // Show total score
+
+            let currentScore = totalScore; // Start Level 2 with previous score
+
+            function updateScore(points) {
+                currentScore += points; // Increase score
+                document.getElementById("score").innerText = currentScore;
+                localStorage.setItem("totalScore", currentScore); // Update stored score
             }
-        ];
 
-        let currentStep = 0;
-        const pseudoCodeEl = document.getElementById("pseudo-code");
-        const userCodeEl = document.getElementById("user-code");
+            let username = localStorage.getItem("username") || "Guest";
+            document.getElementById("username").innerText = username;
 
-        function loadPseudoCode() {
-            pseudoCodeEl.innerText = pseudoCodes[currentStep].code;
-            userCodeEl.value = "";
+            let level1Score = parseInt(localStorage.getItem("level1_score")) || 0;
+            let level2Score = totalScore; 
+
+            let userScore = level2Score; 
+            let correctSound = document.getElementById("correctSound");
+            let incorrectSound = document.getElementById("incorrectSound");
+
+            let selectedPseudocodes = [];
+            let currentIndex = 0;
+            let attempts = 3;
+
+const pseudocodes = [
+    {
+        "pseudo": "#include<stdio.h>\nvoid main() {\n  print(\"Hello\");\n}",
+        "correct": "#include<stdio.h>\nvoid main() {\n  printf(\"Hello\");\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int a = 5\n  printf(\"%d\", a);\n  return 0;\n}",
+        "correct": "int main() {\n  int a = 5;\n  printf(\"%d\", a);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int x = 10;\n  print(\"Value: %d\", x);\n  return 0;\n}",
+        "correct": "int main() {\n  int x = 10;\n  printf(\"Value: %d\", x);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include<stdio.h>\nint main() {\n  char c = 'A'\n  printf(\"%c\", c);\n  return 0;\n}",
+        "correct": "#include<stdio.h>\nint main() {\n  char c = 'A';\n  printf(\"%c\", c);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include<stdio.h>\nvoid main() {\n  printf(Hello);\n}",
+        "correct": "#include<stdio.h>\nvoid main() {\n  printf(\"Hello\");\n}"
+    },
+    {
+        "pseudo": "int main() {\n  float num = 5.5;\n  printf('%f', num);\n  return 0;\n}",
+        "correct": "int main() {\n  float num = 5.5;\n  printf(\"%f\", num);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int a, b = 10;\n  printf(\"%d %d\", a, b);\n  return 0;\n}",
+        "correct": "int main() {\n  int a = 0, b = 10;\n  printf(\"%d %d\", a, b);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nvoid main() {\n  scanf(\"%d\", num);\n}",
+        "correct": "#include <stdio.h>\nvoid main() {\n  int num;\n  scanf(\"%d\", &num);\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main {\n  printf(\"Hello, World!\");\n  return 0;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  printf(\"Hello, World!\");\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main() {\n  int a = 5\n  return 0;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  int a = 5;\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  printf(%d, 10);\n  return 0;\n}",
+        "correct": "int main() {\n  printf(\"%d\", 10);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include<stdio.h>\nvoid main() {\n  int num;\n  scanf(\"%d\", num);\n}",
+        "correct": "#include<stdio.h>\nvoid main() {\n  int num;\n  scanf(\"%d\", &num);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  char str[] = \"Hello;\n  printf(\"%s\", str);\n  return 0;\n}",
+        "correct": "int main() {\n  char str[] = \"Hello\";\n  printf(\"%s\", str);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main() {\n  int a = 5;\n  print(\"%d\", a);\n  return 0;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  int a = 5;\n  printf(\"%d\", a);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  float pi = 3.14;\n  printf(\"Pi: %f\", pi);\n  return;\n}",
+        "correct": "int main() {\n  float pi = 3.14;\n  printf(\"Pi: %f\", pi);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int arr[3] = {1,2,3};\n  printf(\"%d\", arr[3]);\n  return 0;\n}",
+        "correct": "int main() {\n  int arr[3] = {1,2,3};\n  printf(\"%d\", arr[2]);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main() {\n  int x = 10;\n  printf(\"Value: %d\" x);\n  return 0;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  int x = 10;\n  printf(\"Value: %d\", x);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  char c = 'A;\n  printf(\"%c\", c);\n  return 0;\n}",
+        "correct": "int main() {\n  char c = 'A';\n  printf(\"%c\", c);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main() {\n  printf(\"%s\", \"Hello World\");\n  return;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  printf(\"%s\", \"Hello World\");\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int num;\n  scanf(\"%d\", num);\n  return 0;\n}",
+        "correct": "int main() {\n  int num;\n  scanf(\"%d\", &num);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int a = 10\n  return 0;\n}",
+        "correct": "int main() {\n  int a = 10;\n  return 0;\n}"
+    },
+  {
+        "pseudo": "int main() {\n  printf(Hello World);\n  return 0;\n}",
+        "correct": "int main() {\n  printf(\"Hello World\");\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include<stdio.h>\nint main() {\n  int num = 10;\n  printf(%d, num);\n  return 0;\n}",
+        "correct": "#include<stdio.h>\nint main() {\n  int num = 10;\n  printf(\"%d\", num);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  float x = 5.0;\n  printf(\"%.2f\" x);\n  return 0;\n}",
+        "correct": "int main() {\n  float x = 5.0;\n  printf(\"%.2f\", x);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nvoid main() {\n  int num;\n  printf(\"Enter a number:\");\n  scanf(\"%d\", num);\n}",
+        "correct": "#include <stdio.h>\nvoid main() {\n  int num;\n  printf(\"Enter a number:\");\n  scanf(\"%d\", &num);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  char ch = \"A\";\n  printf(\"%c\", ch);\n  return 0;\n}",
+        "correct": "int main() {\n  char ch = 'A';\n  printf(\"%c\", ch);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main() {\n  int num = 5;\n  if(num == 5) {\n    printf(\"Number is 5\");\n  }\n  return;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  int num = 5;\n  if(num == 5) {\n    printf(\"Number is 5\");\n  }\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int arr[3] = {1, 2, 3};\n  printf(\"%d\", arr[3]);\n  return 0;\n}",
+        "correct": "int main() {\n  int arr[3] = {1, 2, 3};\n  printf(\"%d\", arr[2]);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include <stdio.h>\nint main() {\n  int a = 5, b = 10;\n  printf(\"%d\", a + b)\n  return 0;\n}",
+        "correct": "#include <stdio.h>\nint main() {\n  int a = 5, b = 10;\n  printf(\"%d\", a + b);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "int main() {\n  int num;\n  printf(\"Enter number: \");\n  scanf(\"%d\" num);\n  return 0;\n}",
+        "correct": "int main() {\n  int num;\n  printf(\"Enter number: \");\n  scanf(\"%d\", &num);\n  return 0;\n}"
+    },
+    {
+        "pseudo": "#include<stdio.h>\nint main() {\n  printf(\"Hello, World!\");\n  return 0;\n}",
+        "correct": "#include<stdio.h>\nint main() {\n  printf(\"Hello, World!\")\n  return 0;\n}"
+    }
+];
+ 
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
         }
+    }
+});
 
-        function checkAnswer() {
-            const userCode = userCodeEl.value.trim().replace(/\s+/g, '');
-            const correctCode = pseudoCodes[currentStep].correct.trim().replace(/\s+/g, '');
 
-            if (userCode === correctCode) {
-                currentStep++;
-                if (currentStep < pseudoCodes.length) {
-                    alert("Correct! Now fix the next one.");
-                    loadPseudoCode();
+            function initializePseudocodes() {
+                let shuffled = pseudocodes.sort(() => 0.5 - Math.random());
+                selectedPseudocodes = shuffled.slice(0, 4);
+                displayPseudocode();
+            }
+
+            function displayPseudocode() {
+                document.getElementById("incorrect-code").value = selectedPseudocodes[currentIndex].pseudo;
+                document.getElementById("serial-number").innerText = currentIndex + 1;
+                document.getElementById("user-input").value = "";
+            }
+
+           window.checkAnswer = function () {
+                let userInput = document.getElementById("user-input").value.trim();
+
+                if (userInput === selectedPseudocodes[currentIndex].correct) {
+                    correctSound.play();
+                    updateScore(2);
+                    currentIndex++;
+                    attempts = 3; 
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (currentIndex < 4) {
+                        displayPseudocode();
+                    } else {
+                        submitScore(currentScore);
+                        setTimeout(() => {
+                            window.location.href = "level3.html";
+                        }, 2000);
+                    }
                 } else {
-                    alert("Great job! Moving to the next level.");
-                    window.location.href = 'level3.html';
-                }
-            } else {
-                alert("Incorrect! Review the concepts first.");
-                window.location.href = 'concept.html';
-            }
-        }
+                    incorrectSound.play();
+                    attempts--;
+                    document.getElementById("attempts-count").innerText = attempts;
 
-        loadPseudoCode();
+                    if (attempts === 0) {
+                        window.location.href = "concept.html";
+                    }
+                }
+            }
+
+            function submitScore(finalScore) {
+                const email = localStorage.getItem("email");
+                if (!email) {
+                    alert("❌ Email not found! Please log in again.");
+                    return;
+                }
+                
+                fetch("http://localhost:3000/submit-score", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, concept_id: 1, level2_score: finalScore })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Server Response:", data);
+                    alert("Score saved successfully!");
+                })
+                .catch(error => {
+                    console.error("❌ Error submitting score:", error);
+                });
+            }
+
+            initializePseudocodes();
+        });
     </script>
 </body>
 </html>

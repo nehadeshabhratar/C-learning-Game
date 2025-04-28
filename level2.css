@@ -1,0 +1,132 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+body {
+    background: black;
+    color: white;
+    text-align: center;
+    padding-top: 80px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #6a00ff, #ff00ff, #00ffff);
+    padding: 15px 30px;
+    box-shadow: 0 0 20px cyan;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar-center {
+    font-size: 28px;
+    font-weight: bold;
+    color: #00ffff;
+    text-shadow: 0 0 15px #ff00ff;
+}
+
+.user-info, .score {
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 10px cyan;
+}
+
+.user-info {
+    color: #ffcc00;
+}
+
+.score {
+    color: #ffcc00;
+}
+.instructions {
+    font-size: 22px;
+    color: cyan;
+    text-shadow: 0 0 10px cyan;
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    0% { text-shadow: 0 0 10px cyan; }
+    100% { text-shadow: 0 0 20px cyan; }
+}
+
+.progress {
+    font-size: 20px;
+    font-weight: bold;
+    color: lime;
+    transition: color 0.5s ease-in-out, transform 0.3s;
+}
+
+.attempts {
+    font-size: 20px;
+    font-weight: bold;
+    color: red;
+    transition: color 0.5s ease-in-out;
+}
+
+.attempts.blink {
+    animation: blink 0.5s steps(2, start) infinite;
+}
+
+@keyframes blink {
+    50% { color: white; }
+}
+textarea {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px cyan;
+    width: 55%;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: white;
+    overflow-x: auto;
+    font-family: 'Source Code Pro', monospace;
+    border: 1px solid cyan;
+    resize: vertical;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#incorrect-code {
+    color: red;
+    height: 160px; /* Increased height */
+}
+
+#user-input {
+    height: 300px;
+    margin-top: 5px; /* Reduced margin to minimize space */
+}
+
+.submit-btn {
+    background: #00ffff;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px #00ffff;
+    transition: all 0.3s ease-in-out;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background: #ff00ff;
+    box-shadow: 0 0 20px #ff00ff;
+    color: white;
+}
+
+.submit-btn:active {
+    transform: scale(0.95);
+}

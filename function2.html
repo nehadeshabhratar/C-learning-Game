@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 2 - PSEUDOCODE 🚀</title>
+    <link rel="stylesheet" href="level2.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 2 - PSEUDOCODE 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <h3 class="instructions">Fix the errors in the pseudocode below.</h3>
+        <div class="progress">Pseudocode <span id="serial-number">1</span> of 4 </div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        
+        <textarea id="incorrect-code" readonly></textarea>  
+        <textarea id="user-input" placeholder="Enter your corrected pseudocode here..."></textarea><br>
+
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;  
+            document.getElementById("score").innerText = totalScore; // Show total score
+
+            let currentScore = totalScore; // Start Level 2 with previous score
+
+            function updateScore(points) {
+                currentScore += points; // Increase score
+                document.getElementById("score").innerText = currentScore;
+                localStorage.setItem("totalScore", currentScore); // Update stored score
+            }
+
+            let username = localStorage.getItem("username") || "Guest";
+            document.getElementById("username").innerText = username;
+
+            let level1Score = parseInt(localStorage.getItem("level1_score")) || 0;
+            let level2Score = totalScore; 
+
+            let userScore = level2Score; 
+            let correctSound = document.getElementById("correctSound");
+            let incorrectSound = document.getElementById("incorrectSound");
+
+            let selectedPseudocodes = [];
+            let currentIndex = 0;
+            let attempts = 3;
+
+const pseudocodes = [
+    { 
+        "pseudo": "void add(int a, int b) {\n  return a + b;\n}\nint main() {\n  printf(\"%d\", add(3, 5));\n}", 
+        "correct": "int add(int a, int b) {\n  return a + b;\n}\nint main() {\n  printf(\"%d\", add(3, 5));\n}" 
+    },
+
+    { 
+        "pseudo": "void greet() {\n  printf(\"Hello, World!\");\n  return 0;\n}\nint main() {\n  greet();\n}", 
+        "correct": "void greet() {\n  printf(\"Hello, World!\");\n}\nint main() {\n  greet();\n}" 
+    },
+
+    { 
+        "pseudo": "int square(int x) {\n  return x * x;\n}\nint main() {\n  printf(\"%d\", square(4.5));\n}", 
+        "correct": "int square(int x) {\n  return x * x;\n}\nint main() {\n  printf(\"%d\", square(4));\n}" 
+    },
+
+    { 
+        "pseudo": "void display() {\n  printf(\"C Programming\");\n}\nint main() {\n  int result = display();\n  printf(\"%d\", result);\n}", 
+        "correct": "void display() {\n  printf(\"C Programming\");\n}\nint main() {\n  display();\n}" 
+    },
+
+    { 
+        "pseudo": "float divide(int a, int b) {\n  return a / b;\n}\nint main() {\n  printf(\"%f\", divide(5, 2));\n}", 
+        "correct": "float divide(int a, int b) {\n  return (float)a / b;\n}\nint main() {\n  printf(\"%f\", divide(5, 2));\n}" 
+    },
+
+    { 
+        "pseudo": "void printMessage() {\n  printf(\"Welcome\");\n}\nint main() {\n  printMessage;\n}", 
+        "correct": "void printMessage() {\n  printf(\"Welcome\");\n}\nint main() {\n  printMessage();\n}" 
+    },
+
+    { 
+        "pseudo": "int add(int a, int b);\nint main() {\n  printf(\"%d\", add(4, 3));\n}\nint add(int a, int b) {\n  return a + b;\n}", 
+        "correct": "int add(int a, int b);\nint add(int a, int b) {\n  return a + b;\n}\nint main() {\n  printf(\"%d\", add(4, 3));\n}" 
+    },
+
+    { 
+        "pseudo": "int factorial(int n) {\n  if (n == 0)\n    return 1;\n  else\n    return n * factorial(n - 1);\n}\nint main() {\n  printf(\"%d\", factorial(5.5));\n}", 
+        "correct": "int factorial(int n) {\n  if (n == 0)\n    return 1;\n  else\n    return n * factorial(n - 1);\n}\nint main() {\n  printf(\"%d\", factorial(5));\n}" 
+    },
+
+    { 
+        "pseudo": "void swap(int a, int b) {\n  int temp = a;\n  a = b;\n  b = temp;\n}\nint main() {\n  int x = 4, y = 7;\n  swap(x, y);\n  printf(\"%d %d\", x, y);\n}", 
+        "correct": "void swap(int *a, int *b) {\n  int temp = *a;\n  *a = *b;\n  *b = temp;\n}\nint main() {\n  int x = 4, y = 7;\n  swap(&x, &y);\n  printf(\"%d %d\", x, y);\n}" 
+    },
+
+    { 
+        "pseudo": "void show(int num) {\n  printf(\"%d\", num);\n}\nint main() {\n  show(10, 20);\n}", 
+        "correct": "void show(int num) {\n  printf(\"%d\", num);\n}\nint main() {\n  show(10);\n}" 
+    },
+{ 
+        "pseudo": "int sum(int a, int b) {\n  printf(\"%d\", a + b);\n}\nint main() {\n  int result = sum(3, 4);\n  printf(\"%d\", result);\n}", 
+        "correct": "int sum(int a, int b) {\n  return a + b;\n}\nint main() {\n  int result = sum(3, 4);\n  printf(\"%d\", result);\n}" 
+    },
+
+    { 
+        "pseudo": "void printNumber(int num) {\n  printf(\"%d\", num);\n  return num;\n}\nint main() {\n  printNumber(7);\n}", 
+        "correct": "void printNumber(int num) {\n  printf(\"%d\", num);\n}\nint main() {\n  printNumber(7);\n}" 
+    },
+
+    { 
+        "pseudo": "void display() {\n  return \"Hello\";\n}\nint main() {\n  printf(\"%s\", display());\n}", 
+        "correct": "void display() {\n  printf(\"Hello\");\n}\nint main() {\n  display();\n}" 
+    },
+
+    { 
+        "pseudo": "int multiply(int a, int b);\nint main() {\n  printf(\"%d\", multiply(4, 5));\n}\nint multiply(int x, int y) {\n  return x * y;\n}", 
+        "correct": "int multiply(int a, int b);\nint multiply(int a, int b) {\n  return a * b;\n}\nint main() {\n  printf(\"%d\", multiply(4, 5));\n}" 
+    },
+
+    { 
+        "pseudo": "void changeValue(int x) {\n  x = 10;\n}\nint main() {\n  int num = 5;\n  changeValue(num);\n  printf(\"%d\", num);\n}", 
+        "correct": "void changeValue(int *x) {\n  *x = 10;\n}\nint main() {\n  int num = 5;\n  changeValue(&num);\n  printf(\"%d\", num);\n}" 
+    },
+
+    { 
+        "pseudo": "float divide(int a, int b) {\n  return a / b;\n}\nint main() {\n  printf(\"%d\", divide(9, 2));\n}", 
+        "correct": "float divide(int a, int b) {\n  return (float)a / b;\n}\nint main() {\n  printf(\"%f\", divide(9, 2));\n}" 
+    },
+
+    { 
+        "pseudo": "void printMessage();\nint main() {\n  printMessage();\n}\nvoid printMessage() {\n  return \"Hello!\";\n}", 
+        "correct": "void printMessage();\nvoid printMessage() {\n  printf(\"Hello!\");\n}\nint main() {\n  printMessage();\n}" 
+    },
+
+    { 
+        "pseudo": "int power(int base, int exp) {\n  if (exp == 0) return 1;\n  return base * power(base, exp - 1);\n}\nint main() {\n  printf(\"%f\", power(2, 3));\n}", 
+        "correct": "int power(int base, int exp) {\n  if (exp == 0) return 1;\n  return base * power(base, exp - 1);\n}\nint main() {\n  printf(\"%d\", power(2, 3));\n}" 
+    },
+
+    { 
+        "pseudo": "void message() {\n  printf(\"Welcome\");\n}\nint main() {\n  printf(\"%s\", message());\n}", 
+        "correct": "void message() {\n  printf(\"Welcome\");\n}\nint main() {\n  message();\n}" 
+    },
+
+    { 
+        "pseudo": "void printArray(int arr[5]) {\n  for(int i = 0; i < 5; i++) {\n    printf(\"%d \", arr[i]);\n  }\n}\nint main() {\n  int numbers[] = {1, 2, 3, 4, 5};\n  printArray(numbers);\n}", 
+        "correct": "void printArray(int arr[]) {\n  for(int i = 0; i < 5; i++) {\n    printf(\"%d \", arr[i]);\n  }\n}\nint main() {\n  int numbers[] = {1, 2, 3, 4, 5};\n  printArray(numbers);\n}" 
+    },
+
+    { 
+        "pseudo": "void display(int n);\nint main() {\n  printf(\"%d\", display(10));\n}\nvoid display(int n) {\n  printf(\"%d\", n);\n}", 
+        "correct": "void display(int n);\nvoid display(int n) {\n  printf(\"%d\", n);\n}\nint main() {\n  display(10);\n}" 
+    },
+
+    { 
+        "pseudo": "int sumNumbers(int n) {\n  if (n == 0)\n    return 0;\n  else\n    return n + sumNumbers(n - 1);\n}\nint main() {\n  printf(\"%f\", sumNumbers(5));\n}", 
+        "correct": "int sumNumbers(int n) {\n  if (n == 0)\n    return 0;\n  else\n    return n + sumNumbers(n - 1);\n}\nint main() {\n  printf(\"%d\", sumNumbers(5));\n}" 
+    }
+];
+
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+
+
+            function initializePseudocodes() {
+                let shuffled = pseudocodes.sort(() => 0.5 - Math.random());
+                selectedPseudocodes = shuffled.slice(0, 4);
+                displayPseudocode();
+            }
+
+            function displayPseudocode() {
+                document.getElementById("incorrect-code").value = selectedPseudocodes[currentIndex].pseudo;
+                document.getElementById("serial-number").innerText = currentIndex + 1;
+                document.getElementById("user-input").value = "";
+            }
+
+            window.checkAnswer = function () {
+                let userInput = document.getElementById("user-input").value.trim();
+
+                if (userInput === selectedPseudocodes[currentIndex].correct) {
+                    correctSound.play();
+                    updateScore(2);
+                    currentIndex++;
+                    attempts = 3; 
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (currentIndex < 4) {
+                        displayPseudocode();
+                    } else {
+                        submitScore(currentScore);
+                        setTimeout(() => {
+                            window.location.href = "functions3.html";
+                        }, 2000);
+                    }
+                } else {
+                    incorrectSound.play();
+                    attempts--;
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (attempts === 0) {
+                        window.location.href = "concept.html";
+                    }
+                }
+            }
+
+            function submitScore(finalScore) {
+                const email = localStorage.getItem("email");
+                if (!email) {
+                    alert("❌ Email not found! Please log in again.");
+                    return;
+                }
+                
+                fetch("http://localhost:3000/submit-score", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, concept_id: 6, level2_score: finalScore })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Server Response:", data);
+                    alert("Score saved successfully!");
+                })
+                .catch(error => {
+                    console.error("❌ Error submitting score:", error);
+                });
+            }
+
+            initializePseudocodes();
+        });
+    </script>
+</body>
+</html>

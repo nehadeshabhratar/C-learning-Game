@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Programming Basics</title>
+   <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>🚀 C Programming Basics</h1>
+
+<div class="container">
+    <h2>🔹 Basic Structure of a C Program</h2>
+    <pre>
+#include &lt;stdio.h&gt;
+
+int main() {
+    printf("Hello, World!");
+    return 0;
+}
+    </pre>
+    <p>Every C program starts with the <span class="keyword">#include</span> directive and has a <span class="keyword">main()</span> function.</p>
+
+    <h2>🔹 Important Keywords</h2>
+    <ul>
+        <li><span class="keyword">int</span> - Defines an integer variable.</li>
+        <li><span class="keyword">float</span> - Defines a floating-point variable.</li>
+        <li><span class="keyword">char</span> - Defines a character variable.</li>
+        <li><span class="keyword">if, else</span> - Used for conditional statements.</li>
+        <li><span class="keyword">for, while, do</span> - Used for loops.</li>
+        <li><span class="keyword">return</span> - Returns a value from a function.</li>
+        <li><span class="keyword">void</span> - Specifies that a function returns no value.</li>
+        <li><span class="keyword">printf(), scanf()</span> - Used for input/output.</li>
+    </ul>
+
+    <h2>🔹 Data Types in C</h2>
+    <ul>
+        <li><span class="keyword">int</span> - Stores integers (e.g., 1, 2, 3).</li>
+        <li><span class="keyword">float</span> - Stores decimal numbers (e.g., 3.14).</li>
+        <li><span class="keyword">char</span> - Stores a single character (e.g., 'A').</li>
+        <li><span class="keyword">double</span> - Stores larger decimal numbers.</li>
+    </ul>
+
+    <h2>🔹 Control Statements</h2>
+    <p>Control the flow of a program:</p>
+    <ul>
+        <li><span class="keyword">if (condition)</span> - Executes code if the condition is true.</li>
+        <li><span class="keyword">else</span> - Executes code if the condition is false.</li>
+        <li><span class="keyword">switch</span> - Selects one case from multiple options.</li>
+        <li><span class="keyword">for, while, do-while</span> - Looping statements.</li>
+    </ul>
+
+    <h2>🔹 Functions in C</h2>
+    <p>Functions are blocks of code designed to perform specific tasks.</p>
+    <pre>
+void greet() {
+    printf("Hello, User!");
+}
+int main() {
+    greet();
+    return 0;
+}
+    </pre>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

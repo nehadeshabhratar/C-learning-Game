@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+ const pseudocodes = [
+    { 
+        "question": "Write a C program to reverse a string using pointers.", 
+        "correct": "#include <stdio.h>\n#include <string.h>\nvoid reverseString(char *str) {\n    char *start = str, *end = str + strlen(str) - 1;\n    while (start < end) {\n        char temp = *start;\n        *start = *end;\n        *end = temp;\n        start++;\n        end--;\n    }\n}\nint main() {\n    char str[100];\n    printf(\"Enter a string: \");\n    scanf(\"%s\", str);\n    reverseString(str);\n    printf(\"Reversed string: %s\\n\", str);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to copy one string to another using pointers.", 
+        "correct": "#include <stdio.h>\nvoid copyString(char *src, char *dest) {\n    while (*src) {\n        *dest = *src;\n        src++;\n        dest++;\n    }\n    *dest = '\\0';\n}\nint main() {\n    char src[100], dest[100];\n    printf(\"Enter a string: \");\n    scanf(\"%s\", src);\n    copyString(src, dest);\n    printf(\"Copied string: %s\\n\", dest);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the length of a string using pointers.", 
+        "correct": "#include <stdio.h>\nint stringLength(char *str) {\n    int length = 0;\n    while (*str) {\n        length++;\n        str++;\n    }\n    return length;\n}\nint main() {\n    char str[100];\n    printf(\"Enter a string: \");\n    scanf(\"%s\", str);\n    printf(\"Length: %d\\n\", stringLength(str));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to swap two numbers using pointers.", 
+        "correct": "#include <stdio.h>\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\nint main() {\n    int x, y;\n    printf(\"Enter two numbers: \");\n    scanf(\"%d %d\", &x, &y);\n    printf(\"Before swap: x = %d, y = %d\\n\", x, y);\n    swap(&x, &y);\n    printf(\"After swap: x = %d, y = %d\\n\", x, y);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the maximum number in an array using pointers.", 
+        "correct": "#include <stdio.h>\nint findMax(int *arr, int size) {\n    int max = *arr;\n    for (int i = 1; i < size; i++) {\n        if (*(arr + i) > max) {\n            max = *(arr + i);\n        }\n    }\n    return max;\n}\nint main() {\n    int arr[] = {10, 25, 13, 99, 67};\n    int size = 5;\n    printf(\"Max: %d\\n\", findMax(arr, size));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the sum of elements in an array using pointers.", 
+        "correct": "#include <stdio.h>\nint sumArray(int *arr, int size) {\n    int sum = 0;\n    for (int i = 0; i < size; i++) {\n        sum += *(arr + i);\n    }\n    return sum;\n}\nint main() {\n    int arr[] = {5, 10, 15, 20, 25}, size = 5;\n    printf(\"Sum: %d\\n\", sumArray(arr, size));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to reverse an array using pointers.", 
+        "correct": "#include <stdio.h>\nvoid reverseArray(int *arr, int n) {\n    int *start = arr, *end = arr + n - 1;\n    while (start < end) {\n        int temp = *start;\n        *start = *end;\n        *end = temp;\n        start++;\n        end--;\n    }\n}\nint main() {\n    int arr[] = {1, 2, 3, 4, 5}, n = 5;\n    reverseArray(arr, n);\n    for (int i = 0; i < n; i++) {\n        printf(\"%d \", arr[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to compare two strings using pointers.", 
+        "correct": "#include <stdio.h>\nint compareStrings(char *str1, char *str2) {\n    while (*str1 && *str2) {\n        if (*str1 != *str2) return 0;\n        str1++;\n        str2++;\n    }\n    return (*str1 == *str2);\n}\nint main() {\n    char str1[100], str2[100];\n    printf(\"Enter first string: \");\n    scanf(\"%s\", str1);\n    printf(\"Enter second string: \");\n    scanf(\"%s\", str2);\n    if (compareStrings(str1, str2)) printf(\"Strings are equal\\n\");\n    else printf(\"Strings are not equal\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to sort an array using pointers.", 
+        "correct": "#include <stdio.h>\nvoid sortArray(int *arr, int size) {\n    for (int i = 0; i < size - 1; i++) {\n        for (int j = i + 1; j < size; j++) {\n            if (*(arr + i) > *(arr + j)) {\n                int temp = *(arr + i);\n                *(arr + i) = *(arr + j);\n                *(arr + j) = temp;\n            }\n        }\n    }\n}\nint main() {\n    int arr[] = {4, 1, 3, 9, 7}, size = 5;\n    sortArray(arr, size);\n    for (int i = 0; i < size; i++) {\n        printf(\"%d \", arr[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}" 
+    }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+            submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "concept.html";
+            }
+        }
+    };
+});
+
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
+
+
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 8, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+    </script>
+</body>
+</html>  

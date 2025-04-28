@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operators in C</title>
+    <link rel="stylesheet" href="note.css">
+</head>
+<body>
+
+<h1>⚡ Operators in C</h1>
+
+<div class="container">
+    <h2>🔹 What are Operators?</h2>
+    <p>Operators in C are symbols that perform operations on variables and values. They are classified into different categories.</p>
+
+    <h2>🔹 Types of Operators</h2>
+    
+    <h3>📌 1. Arithmetic Operators</h3>
+    <p>Used for mathematical calculations.</p>
+    <table border="1">
+        <tr>
+            <th>Operator</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><span class="keyword">+</span></td>
+            <td>Addition</td>
+            <td>c = a + b;</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">-</span></td>
+            <td>Subtraction</td>
+            <td>c = a - b;</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">*</span></td>
+            <td>Multiplication</td>
+            <td>c = a * b;</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">/</span></td>
+            <td>Division</td>
+            <td>c = a / b;</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">%</span></td>
+            <td>Modulus (Remainder)</td>
+            <td>c = a % b;</td>
+        </tr>
+    </table>
+
+    <h3>📌 2. Relational (Comparison) Operators</h3>
+    <p>Used to compare values.</p>
+    <table border="1">
+        <tr>
+            <th>Operator</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><span class="keyword">==</span></td>
+            <td>Equal to</td>
+            <td>a == b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">!=</span></td>
+            <td>Not equal to</td>
+            <td>a != b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">></span></td>
+            <td>Greater than</td>
+            <td>a > b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword"><</span></td>
+            <td>Less than</td>
+            <td>a < b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">>=</span></td>
+            <td>Greater than or equal to</td>
+            <td>a >= b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword"><=</span></td>
+            <td>Less than or equal to</td>
+            <td>a <= b</td>
+        </tr>
+    </table>
+
+    <h3>📌 3. Logical Operators</h3>
+    <p>Used for logical operations.</p>
+    <table border="1">
+        <tr>
+            <th>Operator</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><span class="keyword">&&</span></td>
+            <td>Logical AND</td>
+            <td>(a > 5 && b < 10)</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">||</span></td>
+            <td>Logical OR</td>
+            <td>(a > 5 || b < 10)</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">!</span></td>
+            <td>Logical NOT</td>
+            <td>!(a > 5)</td>
+        </tr>
+    </table>
+
+    <h3>📌 4. Bitwise Operators</h3>
+    <p>Used to perform bit-level operations.</p>
+    <table border="1">
+        <tr>
+            <th>Operator</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><span class="keyword">&</span></td>
+            <td>Bitwise AND</td>
+            <td>a & b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">|</span></td>
+            <td>Bitwise OR</td>
+            <td>a | b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">^</span></td>
+            <td>Bitwise XOR</td>
+            <td>a ^ b</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">~</span></td>
+            <td>Bitwise Complement</td>
+            <td>~a</td>
+        </tr>
+        <tr>
+            <td><span class="keyword"><<</span></td>
+            <td>Left Shift</td>
+            <td>a << 2</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">>></span></td>
+            <td>Right Shift</td>
+            <td>a >> 2</td>
+        </tr>
+    </table>
+
+    <h3>📌 5. Assignment Operators</h3>
+    <p>Used to assign values to variables.</p>
+    <table border="1">
+        <tr>
+            <th>Operator</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td><span class="keyword">=</span></td>
+            <td>Assign</td>
+            <td>a = 10</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">+=</span></td>
+            <td>Add and assign</td>
+            <td>a += 5 (a = a + 5)</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">-=</span></td>
+            <td>Subtract and assign</td>
+            <td>a -= 5 (a = a - 5)</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">*=</span></td>
+            <td>Multiply and assign</td>
+            <td>a *= 5 (a = a * 5)</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">/=</span></td>
+            <td>Divide and assign</td>
+            <td>a /= 5 (a = a / 5)</td>
+        </tr>
+        <tr>
+            <td><span class="keyword">%=</span></td>
+            <td>Modulus and assign</td>
+            <td>a %= 5 (a = a % 5)</td>
+        </tr>
+    </table>
+
+    <h3>📌 6. Increment and Decrement Operators</h3>
+    <p>Used to increase or decrease the value of a variable.</p>
+    <ul>
+        <li><span class="keyword">++</span> (Increment): <code>a++</code> (Post-increment), <code>++a</code> (Pre-increment)</li>
+        <li><span class="keyword">--</span> (Decrement): <code>a--</code> (Post-decrement), <code>--a</code> (Pre-decrement)</li>
+    </ul>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<script>
+    function goBack() {
+        window.location.href = "concept.html";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 2 - PSEUDOCODE 🚀</title>
+    <link rel="stylesheet" href="level2.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 2 - PSEUDOCODE 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <h3 class="instructions">Fix the errors in the pseudocode below.</h3>
+        <div class="progress">Pseudocode <span id="serial-number">1</span> of 4 </div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        
+        <textarea id="incorrect-code" readonly></textarea>  
+        <textarea id="user-input" placeholder="Enter your corrected pseudocode here..."></textarea><br>
+
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+        <div class="message" id="message"></div>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;  
+            document.getElementById("score").innerText = totalScore; // Show total score
+
+            let currentScore = totalScore; // Start Level 2 with previous score
+
+            function updateScore(points) {
+                currentScore += points; // Increase score
+                document.getElementById("score").innerText = currentScore;
+                localStorage.setItem("totalScore", currentScore); // Update stored score
+            }
+
+            let username = localStorage.getItem("username") || "Guest";
+            document.getElementById("username").innerText = username;
+
+            let level1Score = parseInt(localStorage.getItem("level1_score")) || 0;
+            let level2Score = totalScore; 
+
+            let userScore = level2Score; 
+            let correctSound = document.getElementById("correctSound");
+            let incorrectSound = document.getElementById("incorrectSound");
+
+            let selectedPseudocodes = [];
+            let currentIndex = 0;
+            let attempts = 3;
+
+ const pseudocodes = [
+    { 
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"data.txt\", \"read\");\n  if (fp == NULL) {\n    printf(\"Error opening file\");\n  }\n  fclose(fp);\n}", 
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"data.txt\", \"r\");\n  if (fp == NULL) {\n    printf(\"Error opening file\");\n  }\n  fclose(fp);\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp = fopen(\"output.txt\", \"write\");\n  fprintf(fp, \"Hello, World!\");\n  fclose(fp);\n}", 
+        "correct": "int main() {\n  FILE *fp = fopen(\"output.txt\", \"w\");\n  if (fp != NULL) {\n    fprintf(fp, \"Hello, World!\");\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp;\n  char text[50];\n  fp = fopen(\"input.txt\", \"r\");\n  fgets(text, 50, fp);\n  printf(\"%s\", text);\n}", 
+        "correct": "int main() {\n  FILE *fp;\n  char text[50];\n  fp = fopen(\"input.txt\", \"r\");\n  if (fp != NULL) {\n    fgets(text, 50, fp);\n    printf(\"%s\", text);\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp;\n  int ch;\n  fp = fopen(\"data.txt\", \"r\");\n  while ((ch = fgetc(fp)) != EOF) {\n    printf(\"%c\", ch);\n  }\n}", 
+        "correct": "int main() {\n  FILE *fp;\n  int ch;\n  fp = fopen(\"data.txt\", \"r\");\n  if (fp != NULL) {\n    while ((ch = fgetc(fp)) != EOF) {\n      printf(\"%c\", ch);\n    }\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp = fopen(\"data.bin\", \"wb\");\n  int num = 100;\n  fwrite(&num, sizeof(num), 1, fp);\n}", 
+        "correct": "int main() {\n  FILE *fp = fopen(\"data.bin\", \"wb\");\n  int num = 100;\n  if (fp != NULL) {\n    fwrite(&num, sizeof(num), 1, fp);\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp = fopen(\"info.txt\", \"a\");\n  fprintf(fp, \"Append text\");\n  fclose(fp);\n}", 
+        "correct": "int main() {\n  FILE *fp = fopen(\"info.txt\", \"a\");\n  if (fp != NULL) {\n    fprintf(fp, \"Append text\");\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp;\n  int num;\n  fp = fopen(\"data.bin\", \"rb\");\n  fread(&num, sizeof(int), 1, fp);\n  printf(\"%d\", num);\n}", 
+        "correct": "int main() {\n  FILE *fp;\n  int num;\n  fp = fopen(\"data.bin\", \"rb\");\n  if (fp != NULL) {\n    fread(&num, sizeof(int), 1, fp);\n    printf(\"%d\", num);\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp = fopen(\"log.txt\", \"w+\");\n  fprintf(fp, \"Hello\");\n  fseek(fp, 0, SEEK_SET);\n  char text[10];\n  fgets(text, 10, fp);\n  printf(\"%s\", text);\n}", 
+        "correct": "int main() {\n  FILE *fp = fopen(\"log.txt\", \"w+\");\n  if (fp != NULL) {\n    fprintf(fp, \"Hello\");\n    fseek(fp, 0, SEEK_SET);\n    char text[10];\n    fgets(text, 10, fp);\n    printf(\"%s\", text);\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp = fopen(\"records.txt\", \"r\");\n  int pos = ftell(fp);\n  printf(\"%d\", pos);\n}", 
+        "correct": "int main() {\n  FILE *fp = fopen(\"records.txt\", \"r\");\n  if (fp != NULL) {\n    int pos = ftell(fp);\n    printf(\"%d\", pos);\n    fclose(fp);\n  }\n}" 
+    },
+
+    { 
+        "pseudo": "int main() {\n  FILE *fp;\n  remove(\"delete.txt\");\n}", 
+        "correct": "int main() {\n  FILE *fp;\n  if (remove(\"delete.txt\") == 0) {\n    printf(\"File deleted successfully\");\n  } else {\n    printf(\"Error deleting file\");\n  }\n}" 
+    },
+     {
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"read\");\n  if (fp == NULL) {\n    printf(\"Error opening file\");\n  }\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"r\");\n  if (fp == NULL) {\n    printf(\"Error opening file\");\n  }\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp = fopen(\"file.txt\", \"w\");\n  fprint(fp, \"Hello, World!\");\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp = fopen(\"file.txt\", \"w\");\n  fprintf(fp, \"Hello, World!\");\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  char str[100];\n  fp = fopen(\"file.txt\", \"r\");\n  fscanf(fp, \"%s\", str);\n  printf(\"%d\", str);\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  char str[100];\n  fp = fopen(\"file.txt\", \"r\");\n  fscanf(fp, \"%s\", str);\n  printf(\"%s\", str);\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  char str[] = \"C Programming\";\n  fp = fopen(\"file.txt\", \"w\");\n  fwrite(str, sizeof(str), 1, fp);\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  char str[] = \"C Programming\";\n  fp = fopen(\"file.txt\", \"w\");\n  fwrite(str, sizeof(char), strlen(str), fp);\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  char ch;\n  fp = fopen(\"file.txt\", \"r\");\n  while ((ch = getc(fp)) != EOF) {\n    print(\"%c\", ch);\n  }\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  char ch;\n  fp = fopen(\"file.txt\", \"r\");\n  while ((ch = getc(fp)) != EOF) {\n    printf(\"%c\", ch);\n  }\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  int num = 123;\n  fp = fopen(\"file.txt\", \"w\");\n  fwrite(&num, sizeof(num), 1, fp);\n  close(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  int num = 123;\n  fp = fopen(\"file.txt\", \"w\");\n  fwrite(&num, sizeof(num), 1, fp);\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"a\");\n  fprintf(fp, \"Append data\");\n  close(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"a\");\n  fprintf(fp, \"Append data\");\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"w\");\n  fputs(\"File Handling\", fp);\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"w\");\n  fputs(\"File Handling\\n\", fp);\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  char name[50];\n  fp = fopen(\"file.txt\", \"r\");\n  fget(name, 50, fp);\n  printf(\"%s\", name);\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  char name[50];\n  fp = fopen(\"file.txt\", \"r\");\n  fgets(name, 50, fp);\n  printf(\"%s\", name);\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"rb\");\n  if (fp = NULL) {\n    printf(\"File not found\");\n  }\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"rb\");\n  if (fp == NULL) {\n    printf(\"File not found\");\n  }\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"r+\");\n  fprintf(fp, \"Modify content\");\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"r+\");\n  fputs(\"Modify content\\n\", fp);\n  fclose(fp);\n}"
+    },
+    {
+        "pseudo": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"w\");\n  fseek(fp, 10, SEEK_SET);\n  fprintf(fp, \"Jumped\");\n  fclose(fp);\n}",
+        "correct": "int main() {\n  FILE *fp;\n  fp = fopen(\"file.txt\", \"r+\");\n  fseek(fp, 10, SEEK_SET);\n  fprintf(fp, \"Jumped\");\n  fclose(fp);\n}"
+    }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+
+
+            function initializePseudocodes() {
+                let shuffled = pseudocodes.sort(() => 0.5 - Math.random());
+                selectedPseudocodes = shuffled.slice(0, 4);
+                displayPseudocode();
+            }
+
+            function displayPseudocode() {
+                document.getElementById("incorrect-code").value = selectedPseudocodes[currentIndex].pseudo;
+                document.getElementById("serial-number").innerText = currentIndex + 1;
+                document.getElementById("user-input").value = "";
+            }
+
+            window.checkAnswer = function () {
+                let userInput = document.getElementById("user-input").value.trim();
+
+                if (userInput === selectedPseudocodes[currentIndex].correct) {
+                    correctSound.play();
+                    updateScore(2);
+                    currentIndex++;
+                    attempts = 3; 
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (currentIndex < 4) {
+                        displayPseudocode();
+                    } else {
+                        submitScore(currentScore);
+                        setTimeout(() => {
+                            window.location.href = "file3.html";
+                        }, 2000);
+                    }
+                } else {
+                    incorrectSound.play();
+                    attempts--;
+                    document.getElementById("attempts-count").innerText = attempts;
+
+                    if (attempts === 0) {
+                        window.location.href = "concept.html";
+                    }
+                }
+            }
+
+            function submitScore(finalScore) {
+                const email = localStorage.getItem("email");
+                if (!email) {
+                    alert("❌ Email not found! Please log in again.");
+                    return;
+                }
+                
+                fetch("http://localhost:3000/submit-score", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, concept_id: 9, level2_score: finalScore })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Server Response:", data);
+                    alert("Score saved successfully!");
+                })
+                .catch(error => {
+                    console.error("❌ Error submitting score:", error);
+                });
+            }
+
+            initializePseudocodes();
+        });
+    </script>
+</body>
+</html>

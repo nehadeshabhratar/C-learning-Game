@@ -1,0 +1,78 @@
+<style>
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            box-shadow: 0 0 30px cyan;
+            width: 600px;
+            text-align: center;
+            padding: 20px;
+            transform: perspective(1000px) rotateY(0deg);
+            transition: transform 0.5s;
+        }
+        .quiz-container:hover {
+            transform: perspective(1000px) rotateY(5deg);
+        }
+        h2 {
+            color: cyan;
+        }
+        pre {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+        }
+        textarea {
+            width: 90%;
+            height: 150px;
+            font-size: 16px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid cyan;
+            border-radius: 10px;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px cyan;
+        }
+        .message {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: lime;
+        }
+        #next-level {
+    display: none;
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+        
+    </style>

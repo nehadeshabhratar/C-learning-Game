@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+  const pseudocodes = [
+   [
+    { 
+        "question": "Write a C program to calculate the power of a number using recursion.", 
+        "correct": "#include <stdio.h>\nint power(int base, int exp) {\n    if (exp == 0) return 1;\n    return base * power(base, exp - 1);\n}\nint main() {\n    int base, exp;\n    printf(\"Enter base and exponent: \");\n    scanf(\"%d %d\", &base, &exp);\n    printf(\"%d^%d = %d\\n\", base, exp, power(base, exp));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to find the GCD of two numbers using recursion.", 
+        "correct": "#include <stdio.h>\nint gcd(int a, int b) {\n    if (b == 0) return a;\n    return gcd(b, a % b);\n}\nint main() {\n    int num1, num2;\n    printf(\"Enter two numbers: \");\n    scanf(\"%d %d\", &num1, &num2);\n    printf(\"GCD of %d and %d is %d\\n\", num1, num2, gcd(num1, num2));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to sort an array using the Bubble Sort algorithm with a function.", 
+        "correct": "#include <stdio.h>\nvoid bubbleSort(int arr[], int n) {\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                int temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n            }\n        }\n    }\n}\nint main() {\n    int arr[] = {5, 3, 8, 6, 2, 7, 4, 1}, n = 8;\n    bubbleSort(arr, n);\n    for (int i = 0; i < n; i++) printf(\"%d \", arr[i]);\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to convert a decimal number to binary using recursion.", 
+        "correct": "#include <stdio.h>\nvoid decimalToBinary(int n) {\n    if (n == 0) return;\n    decimalToBinary(n / 2);\n    printf(\"%d\", n % 2);\n}\nint main() {\n    int num;\n    printf(\"Enter a decimal number: \");\n    scanf(\"%d\", &num);\n    if (num == 0) printf(\"0\");\n    else decimalToBinary(num);\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to calculate the sum of elements in an array using recursion.", 
+        "correct": "#include <stdio.h>\nint sumArray(int arr[], int n) {\n    if (n == 0) return 0;\n    return arr[n - 1] + sumArray(arr, n - 1);\n}\nint main() {\n    int arr[] = {1, 2, 3, 4, 5}, n = 5;\n    printf(\"Sum of elements: %d\\n\", sumArray(arr, n));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to check if a number is prime using a function.", 
+        "correct": "#include <stdio.h>\nint isPrime(int n) {\n    if (n < 2) return 0;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) return 0;\n    }\n    return 1;\n}\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    if (isPrime(num)) printf(\"Prime\\n\");\n    else printf(\"Not Prime\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to reverse a string using recursion.", 
+        "correct": "#include <stdio.h>\n#include <string.h>\nvoid reverseString(char str[], int start, int end) {\n    if (start >= end) return;\n    char temp = str[start];\n    str[start] = str[end];\n    str[end] = temp;\n    reverseString(str, start + 1, end - 1);\n}\nint main() {\n    char str[100];\n    printf(\"Enter a string: \");\n    scanf(\"%s\", str);\n    reverseString(str, 0, strlen(str) - 1);\n    printf(\"Reversed string: %s\\n\", str);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to merge two sorted arrays into a single sorted array using functions.", 
+        "correct": "#include <stdio.h>\nvoid mergeArrays(int arr1[], int n1, int arr2[], int n2, int result[]) {\n    int i = 0, j = 0, k = 0;\n    while (i < n1 && j < n2) {\n        if (arr1[i] < arr2[j]) result[k++] = arr1[i++];\n        else result[k++] = arr2[j++];\n    }\n    while (i < n1) result[k++] = arr1[i++];\n    while (j < n2) result[k++] = arr2[j++];\n}\nint main() {\n    int arr1[] = {1, 3, 5}, arr2[] = {2, 4, 6}, result[6];\n    mergeArrays(arr1, 3, arr2, 3, result);\n    for (int i = 0; i < 6; i++) printf(\"%d \", result[i]);\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Write a C program to calculate the sum of digits of a number using recursion.", 
+        "correct": "#include <stdio.h>\nint sumOfDigits(int n) {\n    if (n == 0) return 0;\n    return (n % 10) + sumOfDigits(n / 10);\n}\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    printf(\"Sum of digits: %d\\n\", sumOfDigits(num));\n    return 0;\n}" 
+    }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+              submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "start.html";
+            }
+        }
+    };
+});
+
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
+
+
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 6, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+    </script>
+</body>
+</html>  

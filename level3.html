@@ -3,192 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level 3 - C Syntax Challenge</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            color: white;
-            padding: 50px;
-            overflow: hidden;
-            perspective: 1000px;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
-            display: inline-block;
-            width: 60%;
-            transform: rotateY(0deg);
-            transition: transform 0.5s ease-in-out, box-shadow 0.5s;
-            position: relative;
-        }
-
-        .level {
-            font-size: 28px;
-            font-weight: bold;
-            color: gold;
-            text-shadow: 0px 0px 15px gold;
-            margin-bottom: 10px;
-            animation: glow 1.5s infinite alternate;
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0px 0px 10px gold; }
-            100% { text-shadow: 0px 0px 20px gold; }
-        }
-
-        h2 {
-            font-size: 24px;
-            color: cyan;
-            text-shadow: 0px 0px 10px cyan;
-        }
-
-        pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 18px;
-            box-shadow: 0px 0px 20px cyan;
-            transition: transform 0.3s;
-        }
-
-        pre:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 0px 30px cyan;
-        }
-
-        textarea {
-            width: 100%;
-            height: 150px;
-            font-size: 18px;
-            border-radius: 10px;
-            border: none;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            resize: none;
-            transition: box-shadow 0.3s, transform 0.3s;
-        }
-
-        textarea:focus {
-            outline: none;
-            box-shadow: 0px 0px 15px cyan;
-            transform: scale(1.02);
-        }
-
-        button {
-            margin-top: 15px;
-            padding: 12px 20px;
-            background: linear-gradient(90deg, #ff00ff, #00ffff);
-            border: none;
-            cursor: pointer;
-            color: white;
-            font-size: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 5px 20px rgba(255, 0, 255, 0.5);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        button:hover {
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            transform: scale(1.1);
-            box-shadow: 0px 5px 30px rgba(0, 255, 255, 0.8);
-        }
-
-        button:active {
-            transform: scale(0.9);
-            box-shadow: 0px 2px 10px rgba(255, 0, 255, 0.5);
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0px 0px 30px cyan;
-            text-align: center;
-            z-index: 1000;
-        }
-    </style>
+    <title>🚀 LEVEL 3 - Coding 🚀</title>
+    <link rel="stylesheet" href="L3.css">
 </head>
 <body>
-
-    <!-- Applause Sound -->
-    <audio id="applauseSound" src="C:\Users\Hp\OneDrive\Desktop\game\applause.mp3" loop preload="auto"></audio>
-
-    <div class="container">
-        <div class="level">🔥 Level 3 - C Syntax Challenge 🔥</div>
-        <h2>Write the Correct C Code</h2>
-        <pre id="query-box"></pre>
-        <textarea id="user-answer" placeholder="Type your answer here..."></textarea>
-        <button onclick="checkAnswer()">Submit</button>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 3 - Coding 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
     </div>
 
-    <!-- Success Popup -->
-    <div id="successPopup" class="popup">
-        <h2>✅ Level Successfully Completed!</h2>
-        <button onclick="goToNext()">Proceed</button>
+    <div class="container">
+        <div class="question-box"><b>Question:</b> <span id="incorrect-code"></span></div>
+        <div class="attempts">Attempts left: <span id="attempts-count">3</span></div>
+        <textarea id="user-input" placeholder="Enter your corrected C code here..."></textarea><br>
+        <button class="submit-btn" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <audio id="correctSound" src="victory.mp3"></audio>
+    <audio id="incorrectSound" src="wrong.mp3"></audio>
+
+    <div id="dialog-box" class="hidden">
+        <p>🎉 Concept Completed! 🎉</p>
+        <button onclick="proceedNext()">Proceed</button>
     </div>
 
     <script>
-        const queries = [
-            {
-                question: "Write a basic C program that prints 'Hello, World!'",
-                correct: '#include <stdio.h>\nint main()\n{\n    printf("Hello, World!");\n    return 0;\n}'
-            },
-            {
-                question: "Declare an integer variable named 'num' and assign it the value 100.",
-                correct: 'int num = 100;'
-            },
-            {
-                question: "Write a 'while loop' that prints numbers from 1 to 5.",
-                correct: 'int i = 1;\nwhile(i <= 5) {\n    printf("%d ", i);\n    i++;\n}'
+      document.addEventListener("DOMContentLoaded", function () {
+    let totalScore = parseInt(localStorage.getItem("totalScore")) || 0;
+    document.getElementById("score").innerText = totalScore;
+    let username = localStorage.getItem("username") || "Guest";
+    document.getElementById("username").innerText = username;
+
+    let attempts = 3;
+   const pseudocodes = [
+    { 
+        "question": "Fix the C program to calculate the sum of digits of a given number using recursion.", 
+        "correct": "#include <stdio.h>\nint sumOfDigits(int n) {\n    if (n == 0) return 0;\n    return (n % 10) + sumOfDigits(n / 10);\n}\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    printf(\"Sum of digits: %d\\n\", sumOfDigits(num));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to count the number of vowels in a string using functions.", 
+        "correct": "#include <stdio.h>\n#include <ctype.h>\nint countVowels(char str[]) {\n    int count = 0;\n    for (int i = 0; str[i] != '\\0'; i++) {\n        char ch = tolower(str[i]);\n        if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {\n            count++;\n        }\n    }\n    return count;\n}\nint main() {\n    char str[100];\n    printf(\"Enter a string: \");\n    scanf(\"%s\", str);\n    printf(\"Number of vowels: %d\\n\", countVowels(str));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to find the largest and smallest number in an array.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int arr[100], n, min, max;\n    printf(\"Enter number of elements: \");\n    scanf(\"%d\", &n);\n    printf(\"Enter %d elements: \", n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    min = max = arr[0];\n    for (int i = 1; i < n; i++) {\n        if (arr[i] > max) max = arr[i];\n        if (arr[i] < min) min = arr[i];\n    }\n    printf(\"Smallest: %d, Largest: %d\\n\", min, max);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to print the first N prime numbers.", 
+        "correct": "#include <stdio.h>\nint isPrime(int num) {\n    if (num < 2) return 0;\n    for (int i = 2; i * i <= num; i++) {\n        if (num % i == 0) return 0;\n    }\n    return 1;\n}\nint main() {\n    int n, count = 0, num = 2;\n    printf(\"Enter N: \");\n    scanf(\"%d\", &n);\n    while (count < n) {\n        if (isPrime(num)) {\n            printf(\"%d \", num);\n            count++;\n        }\n        num++;\n    }\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to implement a basic calculator using switch-case.", 
+        "correct": "#include <stdio.h>\nint main() {\n    char op;\n    float num1, num2;\n    printf(\"Enter operator (+, -, *, /): \");\n    scanf(\" %c\", &op);\n    printf(\"Enter two numbers: \");\n    scanf(\"%f %f\", &num1, &num2);\n    switch (op) {\n        case '+': printf(\"Result: %.2f\\n\", num1 + num2); break;\n        case '-': printf(\"Result: %.2f\\n\", num1 - num2); break;\n        case '*': printf(\"Result: %.2f\\n\", num1 * num2); break;\n        case '/': if (num2 != 0) printf(\"Result: %.2f\\n\", num1 / num2); else printf(\"Division by zero error\\n\"); break;\n        default: printf(\"Invalid operator\\n\");\n    }\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to reverse an array using pointers.", 
+        "correct": "#include <stdio.h>\nvoid reverseArray(int *arr, int n) {\n    int *start = arr, *end = arr + n - 1;\n    while (start < end) {\n        int temp = *start;\n        *start = *end;\n        *end = temp;\n        start++;\n        end--;\n    }\n}\nint main() {\n    int arr[] = {1, 2, 3, 4, 5}, n = 5;\n    reverseArray(arr, n);\n    for (int i = 0; i < n; i++) {\n        printf(\"%d \", arr[i]);\n    }\n    printf(\"\\n\");\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to find factorial using recursion.", 
+        "correct": "#include <stdio.h>\nlong long factorial(int n) {\n    if (n == 0) return 1;\n    return n * factorial(n - 1);\n}\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    printf(\"Factorial of %d is %lld\\n\", num, factorial(num));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to swap two numbers using call by reference.", 
+        "correct": "#include <stdio.h>\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\nint main() {\n    int x, y;\n    printf(\"Enter two numbers: \");\n    scanf(\"%d %d\", &x, &y);\n    printf(\"Before swap: x = %d, y = %d\\n\", x, y);\n    swap(&x, &y);\n    printf(\"After swap: x = %d, y = %d\\n\", x, y);\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to find the sum of elements in an array using pointers.", 
+        "correct": "#include <stdio.h>\nint sumArray(int *arr, int size) {\n    int sum = 0;\n    for (int i = 0; i < size; i++) {\n        sum += *(arr + i);\n    }\n    return sum;\n}\nint main() {\n    int arr[] = {5, 10, 15, 20, 25}, size = 5;\n    printf(\"Sum: %d\\n\", sumArray(arr, size));\n    return 0;\n}" 
+    },
+    { 
+        "question": "Fix the C program to check whether a string is a palindrome.", 
+        "correct": "#include <stdio.h>\n#include <string.h>\nint isPalindrome(char str[]) {\n    int len = strlen(str);\n    for (int i = 0; i < len / 2; i++) {\n        if (str[i] != str[len - i - 1]) return 0;\n    }\n    return 1;\n}\nint main() {\n    char str[100];\n    printf(\"Enter a string: \");\n    scanf(\"%s\", str);\n    if (isPalindrome(str)) printf(\"Palindrome\\n\");\n    else printf(\"Not a palindrome\\n\");\n    return 0;\n}" 
+    },
+
+    { 
+        "question": "Fix the C program to find the sum of even and odd numbers separately in an array.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};\n    int evenSum = 0, oddSum = 0, size = 10;\n    for (int i = 0; i < size; i++) {\n        if (arr[i] % 2 == 0) evenSum += arr[i];\n        else oddSum += arr[i];\n    }\n    printf(\"Sum of even numbers: %d\\n\", evenSum);\n    printf(\"Sum of odd numbers: %d\\n\", oddSum);\n    return 0;\n}" 
+    },
+
+    { 
+        "question": "Fix the C program to print the multiplication table of a given number.", 
+        "correct": "#include <stdio.h>\nint main() {\n    int num;\n    printf(\"Enter a number: \");\n    scanf(\"%d\", &num);\n    for (int i = 1; i <= 10; i++) {\n        printf(\"%d x %d = %d\\n\", num, i, num * i);\n    }\n    return 0;\n}" 
+    }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! ");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+
+   // Shuffle the pseudocode questions array
+    pseudocodes.sort(() => Math.random() - 0.5);
+    let selectedPseudocode = pseudocodes[0];
+
+    document.getElementById("incorrect-code").innerText = selectedPseudocode.question;
+    document.getElementById("attempts-count").innerText = attempts;
+
+    window.checkAnswer = function () {
+        let userInput = document.getElementById("user-input").value.trim();
+
+        // Normalize input by removing spaces for comparison
+        if (userInput.replace(/\s+/g, '') === selectedPseudocode.correct.replace(/\s+/g, '')) {
+            document.getElementById("correctSound").play();
+            totalScore += 5;
+            localStorage.setItem("totalScore", totalScore);
+            document.getElementById("score").innerText = totalScore;
+
+             submitScore(totalScore); // Call submitScore when the score is updated
+
+            setTimeout(() => {
+                let dialog = document.getElementById("dialog-box");
+                dialog.classList.add("show"); // Show the dialog box
+                dialog.classList.remove("hidden"); // Ensure it's visible
+            }, 500);
+        } else {
+            document.getElementById("incorrectSound").play();
+            attempts--;
+            document.getElementById("attempts-count").innerText = attempts;
+
+            if (attempts === 0) {
+                alert("❌ No attempts left! Redirecting...");
+                window.location.href = "start.html";
             }
-        ];
-
-        function getRandomQuery() {
-            return queries[Math.floor(Math.random() * queries.length)];
         }
+    };
+});
 
-        let currentQuery = getRandomQuery();
-        document.getElementById("query-box").innerText = currentQuery.question;
+function proceedNext() {
+    isRedirecting = true;  // ✅ Prevent tab switch detection
+    setTimeout(() => {
+        window.location.replace("concept.html"); // ✅ Redirect without triggering tab switch alert
+    }, 500);
+}
+function redirectTo(page) {
+    isRedirecting = true; // ✅ Prevent false tab switch detection
+    window.location.href = page;
+}
 
-        function checkAnswer() {
-            const userAnswer = document.getElementById("user-answer").value.trim().replace(/\s+/g, '');
-            const correctAnswer = currentQuery.correct.trim().replace(/\s+/g, '');
-
-            if (userAnswer === correctAnswer) {
-                let applauseSound = document.getElementById("applauseSound");
-
-                // Play applause sound in loop
-                applauseSound.currentTime = 0;
-                applauseSound.play().catch(error => console.error("Audio playback error: ", error));
-
-                document.getElementById("successPopup").style.display = "block";
-            } else {
-                alert("Incorrect! Try Again or Review the Concepts.");
-            }
-        }
-
-        function goToNext() {
-            // Stop the applause sound when the user clicks Proceed
-            let applauseSound = document.getElementById("applauseSound");
-            applauseSound.pause();
-            applauseSound.currentTime = 0;
-
-            window.location.href = 'feed.html';
-        }
+function submitScore(finalScore) {
+    const email = localStorage.getItem("email");
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+    
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 1, level3_score: finalScore })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
     </script>
 </body>
-</html>
+</html>  

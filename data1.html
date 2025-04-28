@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 1 - C Programming Quiz</title>
+    <link rel="stylesheet" href="L1.css">
+</head>
+<body>
+    <div class="navbar">
+        <span class="user-info">👤 User: <span id="username"></span></span>
+        <span class="navbar-center">🚀 LEVEL 1 - Quiz 🚀</span>
+        <span class="score">⭐ Score: <span id="score">0</span></span>
+    </div>
+
+    <div class="quiz-container" id="quiz">
+        <h3 id="question-number" class="question-number">🔹 Question 1/7 🔹</h3>
+        <h2 id="question" class="question"></h2>
+        <p class="timer" id="timer">Time left: 30s</p>
+        <ul id="options-list"></ul>
+        <button id="submit" disabled>Submit</button>
+        <p id="feedback"></p>
+    </div>
+
+<script>
+    const correctSound = new Audio('victory.mp3');
+    const incorrectSound = new Audio('wrong.mp3');
+    const warningSound = new Audio('warning.mpeg');
+    let timer, timeLeft = 30;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem("username");
+        if (username) {
+            document.getElementById("username").innerText = username;  // ✅ Display username
+        } else {
+            console.warn("⚠️ No username found, showing Guest");
+            document.getElementById("username").innerText = "Guest";
+        }
+    });
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const allQuestions = [
+    { "question": "Which data type is used to store whole numbers in C?", "options": ["int", "float", "char", "double"], "correct": "int" },
+    { "question": "What is the size of a `char` data type in C on a 32-bit system?", "options": ["1 byte", "2 bytes", "4 bytes", "8 bytes"], "correct": "1 byte" },
+    { "question": "Which data type is used to store a single character in C?", "options": ["char", "string", "int", "float"], "correct": "char" },
+    { "question": "Which data type is used to store decimal numbers in C?", "options": ["int", "float", "char", "bool"], "correct": "float" },
+    { "question": "Which format specifier is used to print a floating-point number in C?", "options": ["%d", "%c", "%f", "%s"], "correct": "%f" },
+    { "question": "What will `sizeof(int)` return on a 32-bit system?", "options": ["2", "4", "8", "16"], "correct": "4" },
+    { "question": "What is the default value of an uninitialized `int` variable in C?", "options": ["0", "1", "Garbage value", "NULL"], "correct": "Garbage value" },
+    { "question": "Which keyword is used to define a constant variable in C?", "options": ["final", "constant", "const", "var"], "correct": "const" },
+    { "question": "Which data type is used for large floating-point numbers in C?", "options": ["float", "double", "int", "long"], "correct": "double" },
+    { "question": "Which format specifier is used for a `char` data type in C?", "options": ["%c", "%s", "%d", "%f"], "correct": "%c" },
+    { "question": "Which operator is used to access the memory address of a variable?", "options": ["&", "*", "#", "@"], "correct": "&" },
+    { "question": "Which keyword is used to define a variable inside a function?", "options": ["auto", "register", "static", "global"], "correct": "auto" },
+    { "question": "Which data type has the largest range in C?", "options": ["int", "float", "double", "long double"], "correct": "long double" },
+    { "question": "Which format specifier is used to print a `double` value in C?", "options": ["%lf", "%f", "%d", "%ld"], "correct": "%lf" },
+    { "question": "Which of the following is NOT a valid C variable name?", "options": ["_variable", "int", "var123", "myVar"], "correct": "int" },
+    { "question": "Which keyword is used to create an alias for a data type in C?", "options": ["typedef", "define", "alias", "macro"], "correct": "typedef" },
+    { "question": "Which of the following is NOT a primitive data type in C?", "options": ["int", "float", "array", "char"], "correct": "array" },
+    { "question": "Which data type should be used for storing a person's age?", "options": ["char", "int", "float", "double"], "correct": "int" },
+    { "question": "Which keyword is used to store a variable that retains its value between function calls?", "options": ["auto", "static", "register", "extern"], "correct": "static" },
+    { "question": "Which of the following data types can store only two values: true or false?", "options": ["int", "bool", "float", "double"], "correct": "bool" },
+    { "question": "Which modifier is used to store large integer values in C?", "options": ["short", "long", "float", "unsigned"], "correct": "long" },
+    { "question": "What will `sizeof(float)` return on a 32-bit system?", "options": ["2", "4", "8", "16"], "correct": "4" },
+    { "question": "Which keyword is used to define a global variable in C?", "options": ["auto", "register", "static", "extern"], "correct": "extern" },
+    { "question": "Which of the following is a valid C variable declaration?", "options": ["int x;", "x = int;", "var x;", "declare int x;"], "correct": "int x;" },
+    { "question": "Which format specifier is used to print an unsigned integer in C?", "options": ["%d", "%c", "%u", "%f"], "correct": "%u" },
+    { "question": "Which operator is used to dereference a pointer in C?", "options": ["*", "&", "->", "@@"], "correct": "*" },
+    { "question": "What will `sizeof(double)` return on a 64-bit system?", "options": ["4", "8", "16", "32"], "correct": "8" },
+    { "question": "Which of the following correctly initializes a `char` variable?", "options": ["char ch = 'A';", "char ch = \"A\";", "char ch = A;", "char ch = ['A'];"], "correct": "char ch = 'A';" },
+    { "question": "Which format specifier is used to print a `long` integer in C?", "options": ["%ld", "%l", "%d", "%f"], "correct": "%ld" },
+    { "question": "Which of the following is NOT a valid integer type in C?", "options": ["short", "long", "integer", "unsigned"], "correct": "integer" },
+    { "question": "Which data type is typically used to store a person's height?", "options": ["int", "float", "char", "bool"], "correct": "float" },
+    { "question": "What will `sizeof(long double)` return on a 64-bit system?", "options": ["8", "10", "16", "32"], "correct": "16" },
+    { "question": "Which keyword is used to declare an unmodifiable variable in C?", "options": ["final", "constant", "const", "var"], "correct": "const" },
+    { "question": "Which type modifier makes an integer variable capable of storing only positive values?", "options": ["signed", "unsigned", "volatile", "static"], "correct": "unsigned" }
+];
+let tabSwitchCount = 0; // Track tab switches
+
+document.addEventListener("visibilitychange", function () { 
+    if (document.hidden) {
+        tabSwitchCount++;
+
+        if (tabSwitchCount === 1) {
+            setTimeout(() => alert("⚠️ Warning: You switched tabs!"), 100);
+        } else if (tabSwitchCount > 1) {
+            setTimeout(() => {
+                alert("❌ You switched tabs too many times! Redirecting...");
+                window.location.href = "start.html";
+            }, 100);
+        }
+    }
+});
+    let quizData = shuffleArray([...allQuestions]).slice(0, 7);
+    let currentQuiz = 0;
+    let score = 0;
+
+    function startTimer() {
+    timeLeft = 30;
+    document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+    
+    let warningSoundPlaying = false; // Track if sound is already playing
+
+    timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").innerText = `Time left: ${timeLeft}s`;
+
+        // Play warning sound repeatedly when time is 10s or less
+        if (timeLeft <= 10 && !warningSoundPlaying) {
+            warningSound.loop = true;  // Enable looping
+            warningSound.play();
+            warningSoundPlaying = true; // Prevent multiple plays
+        }
+
+        // Stop sound when the question changes or time reaches 0
+        if (timeLeft === 0) {
+            clearInterval(timer);
+            warningSound.pause();
+            warningSound.currentTime = 0; // Reset sound
+            autoSubmit(); 
+        }
+
+    }, 1000);
+    }
+
+    function autoSubmit() {
+        clearInterval(timer);
+        document.getElementById("feedback").innerText = "⏳ Time up! ";
+        setTimeout(() => {
+            currentQuiz++;
+            if (currentQuiz < quizData.length) {
+                loadQuiz();
+            } else {
+                endQuiz();
+            }
+        }, 2000);
+    }
+
+    function loadQuiz() {
+        clearInterval(timer);
+          warningSound.pause(); // ✅ Stop warning sound
+        warningSound.currentTime = 0; // ✅ Reset sound
+
+        startTimer();
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("submit").disabled = true;
+
+        const currentQuizData = quizData[currentQuiz];
+        document.getElementById("question").innerText = currentQuizData.question;
+        document.getElementById("question-number").innerText = `🔹 Question ${currentQuiz + 1}/7 🔹`;
+
+        shuffleArray(currentQuizData.options).forEach(option => {
+            const li = document.createElement("li");
+            li.innerText = option;
+            li.addEventListener("click", () => {
+                document.querySelectorAll("li").forEach(li =>      li.classList.remove("selected"));
+                li.classList.add("selected");
+                document.getElementById("submit").disabled = false;
+            });
+            document.getElementById("options-list").appendChild(li);
+        });
+    }
+
+   document.getElementById("submit").addEventListener("click", () => {
+    clearInterval(timer);
+    const selected = document.querySelector(".selected");
+    if (!selected) return;
+
+    if (selected.innerText === quizData[currentQuiz].correct) {
+        document.getElementById("feedback").innerText = "✔ Correct!";
+        correctSound.loop = true; // ✅ Keep sound playing
+        correctSound.play();
+        score++;
+    } else {
+        document.getElementById("feedback").innerText = `✖ Incorrect! Correct answer: ${quizData[currentQuiz].correct}`;
+        incorrectSound.loop = true; // ✅ Keep sound playing
+        incorrectSound.play();
+    }
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+        correctSound.pause(); 
+        incorrectSound.pause(); 
+        correctSound.currentTime = 0; 
+        incorrectSound.currentTime = 0; 
+        correctSound.loop = false;  
+        incorrectSound.loop = false;  
+
+        currentQuiz++;
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            endQuiz();
+        }
+    }, 2000);
+});
+    function submitScore(finalScore) {
+    const email = localStorage.getItem("email"); 
+    if (!email) {
+        alert("❌ Email not found! Please log in again.");
+        return;
+    }
+
+    // Store Level 1 score in localStorage for Level 2
+    localStorage.setItem("totalScore", finalScore); // Store total score for Level 2
+
+    fetch("http://localhost:3000/submit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, concept_id: 2, level1_score: finalScore }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        alert("Score saved successfully!");
+    })
+    .catch(error => {
+        console.error("❌ Error submitting score:", error);
+    });
+}
+   function endQuiz() {
+    // Store Level 1 score in localStorage
+    localStorage.setItem("level1_score", score);
+
+    // Submit score to the server
+    submitScore(score);
+
+    // Display final score
+    document.getElementById("quiz").innerHTML = `<h2>🎉 Your Score: ${score}/7</h2>`;
+
+    // Redirect based on score
+   setTimeout(() => {
+    if (score < 5) {
+        localStorage.setItem("nextPage", "concept.html");  // ✅ Store allowed page
+        window.location.href = "concept.html";  
+    } else {
+        localStorage.setItem("nextPage", "data2.html");  // ✅ Store allowed page
+        window.location.href = "data2.html";  
+    }
+}, 3000);
+
+}
+
+    loadQuiz();
+</script>
+</body>
+</html>

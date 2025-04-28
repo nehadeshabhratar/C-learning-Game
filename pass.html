@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+       body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #2e2e4f, #1e1e3e);
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .reset-container {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes float {
+            from {
+                transform: rotateX(10deg) translateY(-10px);
+            }
+            to {
+                transform: rotateX(-10deg) translateY(10px);
+            }
+        }
+
+        .reset-box {
+            width: 380px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            transform: rotateY(10deg);
+            transition: 0.3s;
+        }
+
+        .reset-box:hover {
+            transform: rotateY(0deg) scale(1.05);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .input-box {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #00ffff;
+            outline: none;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .input-box input:focus {
+            border-bottom: 2px solid #00ffcc;
+            box-shadow: 0 0 10px #00ffff;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: #00ffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: black;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .reset-btn:hover {
+            background: #0099cc;
+            box-shadow: 0 0 25px #00ffff;
+            transform: scale(1.1);
+        }
+
+        .error-msg {
+            margin-top: 10px;
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        /* Glowing effect on hover */
+        .reset-box:hover {
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reset-container">
+        <div class="reset-box">
+            <h2>Reset Password</h2>
+            <div class="input-box">
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="newPassword" placeholder="Enter new password" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="confirmPassword" placeholder="Confirm new password" required>
+            </div>
+            <button class="reset-btn" onclick="resetPassword()">Reset Password</button>
+            <p id="errorMsg" class="error-msg"></p>
+        </div>
+    </div>
+
+    <script>
+        function resetPassword() {
+            let email = document.getElementById("email").value;
+            let newPassword = document.getElementById("newPassword").value;
+            let confirmPassword = document.getElementById("confirmPassword").value;
+            let errorMsg = document.getElementById("errorMsg");
+
+            if (!email.includes("@")) {
+                errorMsg.innerText = "Enter a valid email!";
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                errorMsg.innerText = "Password must be at least 6 characters!";
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                errorMsg.innerText = "Passwords do not match!";
+                return;
+            }
+
+            // Send request to backend
+            fetch("http://localhost:3000/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, newPassword })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = "login.html";  // Redirect to login page
+                } else {
+                    errorMsg.innerText = data.message;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
